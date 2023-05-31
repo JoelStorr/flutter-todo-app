@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:todo_app/widgets/done_todes.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
@@ -9,8 +10,8 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   bool isEdit = false;
-  List<String?> todos = ['Hello World', 'Second Element'];
-
+  final List<String?> todos = ['Hello World', 'Second Element'];
+  final List<String?> doneTodos = [];
   final _todoTextController = TextEditingController();
 
   @override
@@ -23,7 +24,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Hello World'),
+        title: const Text('Flutter Do'),
         actions: [
           IconButton(
               onPressed: () {
@@ -59,20 +60,26 @@ class _MyHomePageState extends State<MyHomePage> {
                             title: Text(todos[index]!),
                             trailing: IconButton(
                               icon: const Icon(Icons.delete),
-                              onPressed: () {},
+                              onPressed: () {
+                                setState(() {
+                                  todos.removeAt(index);
+                                });
+                              },
                             ),
                           )
                         : ListTile(
                             key: Key(index.toString()),
                             leading: IconButton(
                               icon: const Icon(Icons.square),
-                              onPressed: () {},
+                              onPressed: () {
+                                setState(() {});
+                              },
                             ),
                             title: TextField(
                               controller: _todoTextController,
                               onSubmitted: (String value) {
                                 setState(() {
-                                  if (value.trim().length < 1) {
+                                  if (value.trim().isEmpty) {
                                     todos.remove(null);
                                     _todoTextController.clear();
                                     return;
@@ -88,7 +95,9 @@ class _MyHomePageState extends State<MyHomePage> {
                 },
               ),
             ),
-            const Text('Demo Text'),
+            DoneTodos(
+              doneTodos: doneTodos,
+            ),
           ],
         ),
       ),
