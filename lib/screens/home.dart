@@ -72,10 +72,16 @@ class _MyHomePageState extends State<MyHomePage> {
                               controller: _todoTextController,
                               onSubmitted: (String value) {
                                 setState(() {
+                                  if (value.trim().length < 1) {
+                                    todos.remove(null);
+                                    _todoTextController.clear();
+                                    return;
+                                  }
                                   todos[index] = value;
                                   _todoTextController.clear();
                                 });
                               },
+                              autofocus: true,
                             ),
                           ),
                   );
