@@ -19,7 +19,9 @@ class DoneTodosOverlay extends StatelessWidget {
         children: [
           const Text('See what you accomplished'),
           TextButton.icon(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pop(context);
+              },
               icon: const Icon(
                 Icons.arrow_downward,
                 color: Colors.white,
@@ -49,14 +51,14 @@ class DoneTodosOverlay extends StatelessWidget {
                 title: Text(
                   doneTodos[index]['todo'],
                   style: const TextStyle(
-                      color: Colors.green,
+                      color: Color.fromARGB(255, 173, 173, 173),
                       decoration: TextDecoration.lineThrough),
                 ),
                 trailing: Text(
                   DateFormat('dd-MM-yyyy – kk:mm')
                       .format(doneTodos[index]['time']),
-                  style:
-                      const TextStyle(color: Color.fromARGB(255, 25, 151, 30)),
+                  style: const TextStyle(
+                      color: Color.fromARGB(255, 173, 173, 173)),
                 ),
               );
             },
