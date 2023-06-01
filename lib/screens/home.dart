@@ -11,7 +11,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   bool isEdit = false;
   final List<String?> todos = ['Hello World', 'Second Element'];
-  final List<String?> doneTodos = [];
+  final List<String?> doneTodos = ['Demo Done'];
   final _todoTextController = TextEditingController();
 
   @override
@@ -49,49 +49,47 @@ class _MyHomePageState extends State<MyHomePage> {
                 shrinkWrap: true,
                 itemCount: todos.length,
                 itemBuilder: (ctx, index) {
-                  return Expanded(
-                    child: todos[index] != null
-                        ? ListTile(
-                            key: Key(index.toString()),
-                            leading: IconButton(
-                              icon: const Icon(Icons.square),
-                              onPressed: () {},
-                            ),
-                            title: Text(todos[index]!),
-                            trailing: IconButton(
-                              icon: const Icon(Icons.delete),
-                              onPressed: () {
-                                setState(() {
-                                  todos.removeAt(index);
-                                });
-                              },
-                            ),
-                          )
-                        : ListTile(
-                            key: Key(index.toString()),
-                            leading: IconButton(
-                              icon: const Icon(Icons.square),
-                              onPressed: () {
-                                setState(() {});
-                              },
-                            ),
-                            title: TextField(
-                              controller: _todoTextController,
-                              onSubmitted: (String value) {
-                                setState(() {
-                                  if (value.trim().isEmpty) {
-                                    todos.remove(null);
-                                    _todoTextController.clear();
-                                    return;
-                                  }
-                                  todos[index] = value;
-                                  _todoTextController.clear();
-                                });
-                              },
-                              autofocus: true,
-                            ),
+                  return todos[index] != null
+                      ? ListTile(
+                          key: Key(index.toString()),
+                          leading: IconButton(
+                            icon: const Icon(Icons.square),
+                            onPressed: () {},
                           ),
-                  );
+                          title: Text(todos[index]!),
+                          trailing: IconButton(
+                            icon: const Icon(Icons.delete),
+                            onPressed: () {
+                              setState(() {
+                                todos.removeAt(index);
+                              });
+                            },
+                          ),
+                        )
+                      : ListTile(
+                          key: Key(index.toString()),
+                          leading: IconButton(
+                            icon: const Icon(Icons.square),
+                            onPressed: () {
+                              setState(() {});
+                            },
+                          ),
+                          title: TextField(
+                            controller: _todoTextController,
+                            onSubmitted: (String value) {
+                              setState(() {
+                                if (value.trim().isEmpty) {
+                                  todos.remove(null);
+                                  _todoTextController.clear();
+                                  return;
+                                }
+                                todos[index] = value;
+                                _todoTextController.clear();
+                              });
+                            },
+                            autofocus: true,
+                          ),
+                        );
                 },
               ),
             ),
