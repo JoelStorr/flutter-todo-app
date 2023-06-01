@@ -54,7 +54,12 @@ class _MyHomePageState extends State<MyHomePage> {
                           key: Key(index.toString()),
                           leading: IconButton(
                             icon: const Icon(Icons.square),
-                            onPressed: () {},
+                            onPressed: () {
+                              setState(() {
+                                doneTodos.add(todos[index]);
+                                todos.removeAt(index);
+                              });
+                            },
                           ),
                           title: Text(todos[index]!),
                           trailing: IconButton(
