@@ -19,6 +19,16 @@ class DoneTodos extends StatelessWidget {
           }),
         );
       },
+      onHorizontalDragStart: (details) {
+        showBottomSheet(
+          context: context,
+          builder: ((context) {
+            return DoneTodosOverlay(
+              doneTodos: doneTodos,
+            );
+          }),
+        );
+      },
       child: const Column(
         children: [
           Icon(Icons.arrow_upward),
