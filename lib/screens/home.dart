@@ -11,7 +11,9 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   bool isEdit = false;
   final List<String?> todos = ['Hello World', 'Second Element'];
-  final List<String?> doneTodos = ['Demo Done'];
+  final List<Map<String, dynamic>> doneTodos = [
+    {'todo': 'Demo Done', 'time': DateTime.now()}
+  ];
   final _todoTextController = TextEditingController();
 
   @override
@@ -56,7 +58,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             icon: const Icon(Icons.square),
                             onPressed: () {
                               setState(() {
-                                doneTodos.add(todos[index]);
+                                /* doneTodos.add(todos[index]); */
                                 todos.removeAt(index);
                               });
                             },

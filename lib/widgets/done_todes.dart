@@ -4,7 +4,7 @@ import 'package:todo_app/widgets/done_totos_overlay.dart';
 class DoneTodos extends StatelessWidget {
   const DoneTodos({super.key, required this.doneTodos});
 
-  final List<String?> doneTodos;
+  final List<Map<String, dynamic>> doneTodos;
 
   @override
   Widget build(BuildContext context) {
