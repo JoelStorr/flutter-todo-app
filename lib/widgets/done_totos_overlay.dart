@@ -9,7 +9,9 @@ class DoneTodosOverlay extends StatelessWidget {
     return Container(
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height * 0.7,
-      color: Colors.amber,
+      decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.background.withOpacity(0.8),
+          borderRadius: BorderRadius.circular(25)),
       padding: const EdgeInsets.all(30),
       child: Column(
         mainAxisSize: MainAxisSize.min,
