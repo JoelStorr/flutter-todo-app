@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 class MySideDrawer extends StatefulWidget {
-  const MySideDrawer({super.key});
+  const MySideDrawer({super.key, required this.listTitle});
+
+  final void Function(String) listTitle;
 
   @override
   State<MySideDrawer> createState() => _MySideDrawerState();
@@ -14,7 +16,7 @@ class _MySideDrawerState extends State<MySideDrawer> {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      backgroundColor: Color.fromARGB(255, 48, 48, 48),
+      backgroundColor: const Color.fromARGB(255, 48, 48, 48),
       child: Column(
         children: [
           Expanded(
@@ -46,13 +48,19 @@ class _MySideDrawerState extends State<MySideDrawer> {
               itemCount: todoList.length,
               itemBuilder: (context, index) {
                 if (todoList[index] != null) {
-                  return ListTile(
-                    leading: const Icon(
-                      Icons.list,
-                      size: 26,
-                      color: Colors.white70,
+                  return GestureDetector(
+                    onTap: () {
+                      widget.listTitle(todoList[index]);
+                      Navigator.of(context).pop();
+                    },
+                    child: ListTile(
+                      leading: const Icon(
+                        Icons.list,
+                        size: 26,
+                        color: Colors.white70,
+                      ),
+                      title: Text(todoList[index]),
                     ),
-                    title: Text(todoList[index]),
                   );
                 } else {
                   return ListTile(

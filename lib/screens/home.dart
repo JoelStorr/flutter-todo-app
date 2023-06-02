@@ -11,9 +11,17 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   bool isEdit = false;
+  final _todoTextController = TextEditingController();
   final List<String?> todos = ['Hello World', 'Second Element'];
   final List<Map<String, dynamic>> doneTodos = [];
-  final _todoTextController = TextEditingController();
+
+  String _title = 'Todo';
+
+  void onChnageTitle(String newTitle) {
+    setState(() {
+      _title = newTitle;
+    });
+  }
 
   @override
   void dispose() {
@@ -25,7 +33,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Flutter Do'),
+        title: Text(_title),
         actions: [
           IconButton(
               onPressed: () {
@@ -40,7 +48,9 @@ class _MyHomePageState extends State<MyHomePage> {
               icon: const Icon(Icons.add))
         ],
       ),
-      drawer: const MySideDrawer(),
+      drawer: MySideDrawer(
+        listTitle: onChnageTitle,
+      ),
       body: SafeArea(
         child: Column(
           mainAxisSize: MainAxisSize.max,
