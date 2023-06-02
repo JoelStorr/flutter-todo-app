@@ -4,6 +4,14 @@ import 'dart:io';
 
 import 'package:todo_app/models/todo_item_model.dart';
 
+/* 
+  Structure Idea for State
+  {
+    parentProjectId : [TodoItems, TodoItems],
+    parentProjectId : [TodoItems, TodoItems],
+  }
+ */
+
 class TodoItemsNotifire extends StateNotifier<List<TodoItem>> {
   TodoItemsNotifire() : super([]);
 
