@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:todo_app/models/todo_project_model.dart';
 import 'package:todo_app/providers/todo_projects_provider.dart';
 
 class MySideDrawer extends ConsumerStatefulWidget {
@@ -12,13 +13,18 @@ class MySideDrawer extends ConsumerStatefulWidget {
 }
 
 class _MySideDrawerState extends ConsumerState<MySideDrawer> {
-  final List todoList = ['Work', 'Shopping', 'Sport'];
+  List<TodoProject?> _todoList = [];
 
   final _listTextController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    final myTodoLists = ref.watch(todoProjectsProvider.notifier);
-    print(myTodoLists);
+    final List<TodoProject> myTodoLists = ref.watch(todoProjectsProvider);
+
+    if (_todoList.isNotEmpty && _todoList.last == null) {
+      _todoList = [...myTodoLists, null];
+    } else {
+      _todoList = [...myTodoLists];
+    }
 
     return Drawer(
       backgroundColor: const Color.fromARGB(255, 48, 48, 48),
@@ -50,12 +56,12 @@ class _MySideDrawerState extends ConsumerState<MySideDrawer> {
           Expanded(
             flex: 4,
             child: ListView.builder(
-              itemCount: todoList.length,
+              itemCount: _todoList.length,
               itemBuilder: (context, index) {
-                if (todoList[index] != null) {
+                if (_todoList[index] != null) {
                   return GestureDetector(
                     onTap: () {
-                      widget.listTitle(todoList[index]);
+                      widget.listTitle(_todoList[index]!.name);
                       Navigator.of(context).pop();
                     },
                     child: ListTile(
@@ -64,7 +70,7 @@ class _MySideDrawerState extends ConsumerState<MySideDrawer> {
                         size: 26,
                         color: Colors.white70,
                       ),
-                      title: Text(todoList[index]),
+                      title: Text(_todoList[index]!.name),
                     ),
                   );
                 } else {
@@ -75,11 +81,15 @@ class _MySideDrawerState extends ConsumerState<MySideDrawer> {
                       onSubmitted: (String value) {
                         setState(() {
                           if (value.trim().isEmpty) {
-                            todoList.remove(null);
+                            _todoList.remove(null);
                             _listTextController.clear();
                             return;
                           }
-                          todoList[index] = value;
+
+                          final wasAdded = ref
+                              .read(todoProjectsProvider.notifier)
+                              .addTodoProject(todoProjectName: value);
+                          _todoList.remove(null);
                           _listTextController.clear();
                         });
                       },
@@ -94,7 +104,7 @@ class _MySideDrawerState extends ConsumerState<MySideDrawer> {
             child: TextButton.icon(
               onPressed: () {
                 setState(() {
-                  todoList.add(null);
+                  _todoList.add(null);
                 });
               },
               icon: const Icon(
