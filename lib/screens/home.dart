@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:todo_app/widgets/done_todes.dart';
+import 'package:todo_app/widgets/side_drawer.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
@@ -39,6 +40,7 @@ class _MyHomePageState extends State<MyHomePage> {
               icon: const Icon(Icons.add))
         ],
       ),
+      drawer: const MySideDrawer(),
       body: SafeArea(
         child: Column(
           mainAxisSize: MainAxisSize.max,

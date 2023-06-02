@@ -68,6 +68,3 @@ class DoneTodosOverlay extends StatelessWidget {
     );
   }
 }
-
-//TODO: Add Button to Close Overlay 
-//TODO: Dispaly a List of the Accomplished Todos
