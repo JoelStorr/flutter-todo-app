@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:todo_app/providers/todo_lists_provider.dart';
+import 'package:todo_app/providers/todo_projects_provider.dart';
 
 class MySideDrawer extends ConsumerStatefulWidget {
   const MySideDrawer({super.key, required this.listTitle});
@@ -14,18 +14,10 @@ class MySideDrawer extends ConsumerStatefulWidget {
 class _MySideDrawerState extends ConsumerState<MySideDrawer> {
   final List todoList = ['Work', 'Shopping', 'Sport'];
 
-  late List myTodoLists;
-
-  @override
-  void initState() {
-    myTodoLists = ref.watch(todoListsProvider);
-
-    super.initState();
-  }
-
   final _listTextController = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    final myTodoLists = ref.watch(todoProjectsProvider.notifier);
     print(myTodoLists);
 
     return Drawer(
