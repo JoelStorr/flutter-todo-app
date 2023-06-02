@@ -31,8 +31,16 @@ class DoneTodos extends StatelessWidget {
       },
       child: const Column(
         children: [
-          Icon(Icons.arrow_upward),
-          Text('See what you acomplished'),
+          Icon(
+            Icons.arrow_upward,
+            color: Color.fromARGB(255, 134, 177, 198),
+            size: 16,
+          ),
+          Text(
+            'See what you acomplished',
+            style: TextStyle(
+                fontSize: 14, color: Color.fromARGB(255, 134, 177, 198)),
+          ),
         ],
       ),
     );

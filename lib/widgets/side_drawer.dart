@@ -92,6 +92,7 @@ class _MySideDrawerState extends State<MySideDrawer> {
                 'Add new List',
                 style: TextStyle(
                   color: Color.fromARGB(255, 134, 177, 198),
+                  fontSize: 14,
                 ),
               ),
             ),

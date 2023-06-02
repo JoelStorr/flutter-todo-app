@@ -24,12 +24,13 @@ class DoneTodosOverlay extends StatelessWidget {
               },
               icon: const Icon(
                 Icons.arrow_downward,
-                color: Colors.white,
+                color: Color.fromARGB(255, 134, 177, 198),
                 size: 15,
               ),
               label: const Text(
                 'Swipe down to close',
-                style: TextStyle(color: Colors.white, fontSize: 12),
+                style: TextStyle(
+                    color: Color.fromARGB(255, 134, 177, 198), fontSize: 12),
               )),
           const SizedBox(
             height: 30,
