@@ -5,8 +5,7 @@ import 'dart:io';
 import 'package:todo_app/models/todo_project_model.dart';
 
 class TodoProjectsNotifire extends StateNotifier<List<TodoProject>> {
-  TodoProjectsNotifire()
-      : super([TodoProject(position: 0, name: 'First Project')]);
+  TodoProjectsNotifire() : super([TodoProject(position: 0, name: 'Todos')]);
 
   bool addTodoProject({required String todoProjectName}) {
     final currentListLength = state.length;
