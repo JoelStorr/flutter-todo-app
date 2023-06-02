@@ -6,7 +6,7 @@ import 'package:todo_app/providers/todo_projects_provider.dart';
 class MySideDrawer extends ConsumerStatefulWidget {
   const MySideDrawer({super.key, required this.listTitle});
 
-  final void Function(String) listTitle;
+  final void Function(TodoProject) listTitle;
 
   @override
   ConsumerState<MySideDrawer> createState() => _MySideDrawerState();
@@ -62,7 +62,7 @@ class _MySideDrawerState extends ConsumerState<MySideDrawer> {
                 if (_todoList[index] != null) {
                   return GestureDetector(
                     onTap: () {
-                      widget.listTitle(_todoList[index]!.name);
+                      widget.listTitle(_todoList[index]!);
                       Navigator.of(context).pop();
                     },
                     child: ListTile(
