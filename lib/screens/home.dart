@@ -1,25 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:todo_app/models/todo_project_model.dart';
+import 'package:todo_app/providers/todo_projects_provider.dart';
 import 'package:todo_app/widgets/done_todes.dart';
 import 'package:todo_app/widgets/side_drawer.dart';
 
-class MyHomePage extends StatefulWidget {
+class MyHomePage extends ConsumerStatefulWidget {
   const MyHomePage({super.key});
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  ConsumerState<MyHomePage> createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends ConsumerState<MyHomePage> {
   bool isEdit = false;
   final _todoTextController = TextEditingController();
   final List<String?> todos = ['Hello World', 'Second Element'];
   final List<Map<String, dynamic>> doneTodos = [];
 
-  String _title = 'Todo';
+  String? _title = null;
 
-  void onChnageTitle(String newTitle) {
+  void onChnageTitle(TodoProject project) {
     setState(() {
-      _title = newTitle;
+      _title = project.name;
     });
   }
 
@@ -31,9 +34,12 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final List<TodoProject> defaultTodo = ref.read(todoProjectsProvider);
+    _title ??= defaultTodo[0].name;
+
     return Scaffold(
       appBar: AppBar(
-        title: Text(_title),
+        title: Text(_title!),
         actions: [
           IconButton(
               onPressed: () {
