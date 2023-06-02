@@ -6,6 +6,7 @@ class TodoItem {
   TodoItem({
     required this.name,
     required this.parentId,
+    required this.postion,
     time,
     this.done = false,
   })  : id = uuid.v1(),
@@ -16,4 +17,5 @@ class TodoItem {
   String name;
   DateTime time;
   bool done;
+  int postion;
 }

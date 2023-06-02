@@ -20,6 +20,7 @@ class _MySideDrawerState extends ConsumerState<MySideDrawer> {
   Widget build(BuildContext context) {
     final List<TodoProject> myTodoLists = ref.watch(todoProjectsProvider);
 
+    /* NOTE: Null List State should be handled in Component */
     if (_todoList.isNotEmpty && _todoList.last == null) {
       _todoList = [...myTodoLists, null];
     } else {
