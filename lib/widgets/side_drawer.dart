@@ -1,20 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:todo_app/providers/todo_lists_provider.dart';
 
-class MySideDrawer extends StatefulWidget {
+class MySideDrawer extends ConsumerStatefulWidget {
   const MySideDrawer({super.key, required this.listTitle});
 
   final void Function(String) listTitle;
 
   @override
-  State<MySideDrawer> createState() => _MySideDrawerState();
+  ConsumerState<MySideDrawer> createState() => _MySideDrawerState();
 }
 
-class _MySideDrawerState extends State<MySideDrawer> {
+class _MySideDrawerState extends ConsumerState<MySideDrawer> {
   final List todoList = ['Work', 'Shopping', 'Sport'];
+
+  late List myTodoLists;
+
+  @override
+  void initState() {
+    myTodoLists = ref.watch(todoListsProvider);
+
+    super.initState();
+  }
 
   final _listTextController = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    print(myTodoLists);
+
     return Drawer(
       backgroundColor: const Color.fromARGB(255, 48, 48, 48),
       child: Column(
