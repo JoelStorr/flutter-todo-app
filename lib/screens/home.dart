@@ -42,11 +42,11 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
     _title ??= defaultProject[0].name;
     _projectId ??= defaultProject[0].id;
 
-    final List<TodoItem> myTodos = ref.watch(TodoItemsProvider);
+    final Map<String, List> myTodos = ref.watch(todoItemsProvider);
     if (todos.isNotEmpty && todos.last == null) {
-      todos = [...myTodos, null];
+      todos = [...myTodos['active']!, null];
     } else {
-      todos = [...myTodos];
+      todos = [...myTodos['active']!];
     }
 
     return Scaffold(
@@ -120,7 +120,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                                 }
 
                                 final wasAdded = ref
-                                    .read(TodoItemsProvider.notifier)
+                                    .read(todoItemsProvider.notifier)
                                     .addTodoItem(
                                         projectId: _projectId!,
                                         todoItemName: value);

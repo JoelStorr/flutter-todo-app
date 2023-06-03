@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'dart:io';
+/* import 'dart:io'; */
 
 import 'package:todo_app/models/todo_item_model.dart';
 
@@ -11,10 +11,15 @@ import 'package:todo_app/models/todo_item_model.dart';
     parentProjectId : [TodoItems, TodoItems],
   }
  */
-
-class TodoItemsNotifire extends StateNotifier<List<TodoItem>> {
+// TodoItem(name: 'Default Todo', projectId: '0000', postion: 0)
+class TodoItemsNotifire extends StateNotifier<Map<String, List>> {
   TodoItemsNotifire()
-      : super([TodoItem(name: 'Default Todo', projectId: '0000', postion: 0)]);
+      : super({
+          'active': [
+            TodoItem(name: 'Default Todo', projectId: '0000', postion: 0)
+          ],
+          'done': []
+        });
 
   bool addTodoItem({required String todoItemName, required String projectId}) {
     final currentListLength = state.length;
@@ -24,11 +29,16 @@ class TodoItemsNotifire extends StateNotifier<List<TodoItem>> {
       postion: currentListLength,
     );
 
-    state = [...state, tempTodoProject];
+    final Map<String, List> tempState = {...state};
+    tempState['active']!.add(tempTodoProject);
+
+    state = {...tempState};
     return true;
   }
+
+  //TODO: Chnage Todo Items done status from true to false or from false to true
 }
 
-final TodoItemsProvider =
-    StateNotifierProvider<TodoItemsNotifire, List<TodoItem>>(
+final todoItemsProvider =
+    StateNotifierProvider<TodoItemsNotifire, Map<String, List>>(
         (ref) => TodoItemsNotifire());
