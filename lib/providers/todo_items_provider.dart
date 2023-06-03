@@ -38,7 +38,6 @@ class TodoItemsNotifire extends StateNotifier<Map<String, List>> {
 
   //NOTE: Sets Todo to done
   void setTodoToDone({required String todoId}) {
-    print(todoId);
     final tempState = {...state};
 
     tempState['done']!.add(
@@ -52,7 +51,6 @@ class TodoItemsNotifire extends StateNotifier<Map<String, List>> {
 
   //NOTE: Sets Todo to active
   void setTodoToActive({required String todoId}) {
-    print(todoId);
     final tempState = {...state};
 
     tempState['active']!.add(
