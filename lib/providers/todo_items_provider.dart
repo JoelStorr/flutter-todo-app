@@ -37,6 +37,17 @@ class TodoItemsNotifire extends StateNotifier<Map<String, List>> {
   }
 
   //TODO: Chnage Todo Items done status from true to false or from false to true
+  bool setTodoToDone({required String todoId}) {
+    print(todoId);
+    final tempState = {...state};
+
+    tempState['done']!.add(
+      tempState['active']!.firstWhere((element) => element.id == todoId),
+    );
+    tempState['active']!.removeWhere((element) => element.id == todoId);
+    state = {...tempState};
+    return true;
+  }
 }
 
 final todoItemsProvider =

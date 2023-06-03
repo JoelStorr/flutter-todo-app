@@ -77,12 +77,17 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                 itemCount: todos.length,
                 itemBuilder: (ctx, index) {
                   return todos[index] != null
+                      /* NOTE: Dispaly Todos */
                       ? ListTile(
                           key: Key(index.toString()),
                           leading: IconButton(
                             icon: const Icon(Icons.square),
                             onPressed: () {
                               setState(() {
+                                final val = ref
+                                    .read(todoItemsProvider.notifier)
+                                    .setTodoToDone(todoId: todos[index]!.id);
+
                                 doneTodos.add({
                                   'todo': todos[index],
                                   'time': DateTime.now()
@@ -101,6 +106,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                             },
                           ),
                         )
+                      /* NOTE: Display Input to add Todo */
                       : ListTile(
                           key: Key(index.toString()),
                           leading: IconButton(
@@ -134,6 +140,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                 },
               ),
             ),
+            /* NOTE: Shows Popup to display Todo History */
             DoneTodos(
               doneTodos: doneTodos,
             ),
