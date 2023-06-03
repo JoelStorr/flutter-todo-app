@@ -4,9 +4,9 @@ import 'package:todo_app/models/todo_project_model.dart';
 import 'package:todo_app/providers/todo_projects_provider.dart';
 
 class MySideDrawer extends ConsumerStatefulWidget {
-  const MySideDrawer({super.key, required this.listTitle});
+  const MySideDrawer({super.key, required this.currProject});
 
-  final void Function(TodoProject) listTitle;
+  final void Function(TodoProject) currProject;
 
   @override
   ConsumerState<MySideDrawer> createState() => _MySideDrawerState();
@@ -62,7 +62,7 @@ class _MySideDrawerState extends ConsumerState<MySideDrawer> {
                 if (_todoList[index] != null) {
                   return GestureDetector(
                     onTap: () {
-                      widget.listTitle(_todoList[index]!);
+                      widget.currProject(_todoList[index]!);
                       Navigator.of(context).pop();
                     },
                     child: ListTile(

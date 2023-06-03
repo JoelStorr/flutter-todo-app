@@ -55,7 +55,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
         ],
       ),
       drawer: MySideDrawer(
-        listTitle: onChnageTitle,
+        currProject: onChnageTitle,
       ),
       body: SafeArea(
         child: Column(
