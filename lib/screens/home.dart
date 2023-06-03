@@ -6,6 +6,7 @@ import 'package:todo_app/providers/todo_items_provider.dart';
 import 'package:todo_app/providers/todo_projects_provider.dart';
 import 'package:todo_app/widgets/done_todes.dart';
 import 'package:todo_app/widgets/side_drawer.dart';
+import 'package:todo_app/db/isar_services.dart';
 
 class MyHomePage extends ConsumerStatefulWidget {
   const MyHomePage({super.key});
@@ -22,7 +23,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
 
   String? _title;
   String? _projectId;
-
+  final service = IsarService();
   void onChnageTitle(TodoProject project) {
     setState(() {
       _title = project.name;
@@ -65,6 +66,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
         ],
       ),
       drawer: MySideDrawer(
+        service,
         currProject: onChnageTitle,
       ),
       body: SafeArea(

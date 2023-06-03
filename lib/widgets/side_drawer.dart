@@ -3,9 +3,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:todo_app/models/todo_project_model.dart';
 import 'package:todo_app/providers/todo_projects_provider.dart';
 
-class MySideDrawer extends ConsumerStatefulWidget {
-  const MySideDrawer({super.key, required this.currProject});
+//NOTE: For DB
+import 'package:todo_app/db/todo_project_db.dart' as todo_project_db;
+import 'package:todo_app/db/isar_services.dart';
 
+class MySideDrawer extends ConsumerStatefulWidget {
+  const MySideDrawer(this.services, {super.key, required this.currProject});
+  final IsarService services;
   final void Function(TodoProject) currProject;
 
   @override
@@ -87,9 +91,12 @@ class _MySideDrawerState extends ConsumerState<MySideDrawer> {
                             return;
                           }
 
-                          final wasAdded = ref
+                          widget.services.saveTodoProject(
+                              todo_project_db.TodoProject()..title = value);
+
+                          /* ref
                               .read(todoProjectsProvider.notifier)
-                              .addTodoProject(todoProjectName: value);
+                              .addTodoProject(todoProjectName: value); */
                           _todoList.remove(null);
                           _listTextController.clear();
                         });
