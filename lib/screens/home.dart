@@ -85,7 +85,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                             icon: const Icon(Icons.square),
                             onPressed: () {
                               setState(() {
-                                final val = ref
+                                ref
                                     .read(todoItemsProvider.notifier)
                                     .setTodoToDone(todoId: todos[index]!.id);
                               });
@@ -96,7 +96,9 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                             icon: const Icon(Icons.delete),
                             onPressed: () {
                               setState(() {
-                                todos.removeAt(index);
+                                ref
+                                    .read(todoItemsProvider.notifier)
+                                    .deleteTodo(todoId: todos[index]!.id);
                               });
                             },
                           ),
@@ -120,7 +122,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                                   return;
                                 }
 
-                                final wasAdded = ref
+                                ref
                                     .read(todoItemsProvider.notifier)
                                     .addTodoItem(
                                         projectId: _projectId!,
@@ -136,9 +138,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
               ),
             ),
             /* NOTE: Shows Popup to display Todo History */
-            DoneTodos(
-              doneTodos: doneTodos,
-            ),
+            const DoneTodos(),
           ],
         ),
       ),
