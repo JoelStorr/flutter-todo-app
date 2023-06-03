@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:todo_app/models/todo_item_model.dart';
 import 'package:todo_app/models/todo_project_model.dart';
+import 'package:todo_app/providers/todo_items_provider.dart';
 import 'package:todo_app/providers/todo_projects_provider.dart';
 import 'package:todo_app/widgets/done_todes.dart';
 import 'package:todo_app/widgets/side_drawer.dart';
@@ -15,14 +17,16 @@ class MyHomePage extends ConsumerStatefulWidget {
 class _MyHomePageState extends ConsumerState<MyHomePage> {
   bool isEdit = false;
   final _todoTextController = TextEditingController();
-  final List<String?> todos = ['Hello World', 'Second Element'];
+  List<TodoItem?> todos = [];
   final List<Map<String, dynamic>> doneTodos = [];
 
-  String? _title = null;
+  String? _title;
+  String? _projectId;
 
   void onChnageTitle(TodoProject project) {
     setState(() {
       _title = project.name;
+      _projectId = project.id;
     });
   }
 
@@ -34,8 +38,16 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final List<TodoProject> defaultTodo = ref.read(todoProjectsProvider);
-    _title ??= defaultTodo[0].name;
+    final List<TodoProject> defaultProject = ref.read(todoProjectsProvider);
+    _title ??= defaultProject[0].name;
+    _projectId ??= defaultProject[0].id;
+
+    final List<TodoItem> myTodos = ref.watch(TodoItemsProvider);
+    if (todos.isNotEmpty && todos.last == null) {
+      todos = [...myTodos, null];
+    } else {
+      todos = [...myTodos];
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -43,13 +55,10 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
         actions: [
           IconButton(
               onPressed: () {
-                if (todos.isNotEmpty && todos.last == null) {
-                  return;
-                }
-
                 setState(() {
                   todos.add(null);
                 });
+                print(todos.last);
               },
               icon: const Icon(Icons.add))
         ],
@@ -82,7 +91,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                               });
                             },
                           ),
-                          title: Text(todos[index]!),
+                          title: Text(todos[index]!.name),
                           trailing: IconButton(
                             icon: const Icon(Icons.delete),
                             onPressed: () {
@@ -109,7 +118,13 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                                   _todoTextController.clear();
                                   return;
                                 }
-                                todos[index] = value;
+
+                                final wasAdded = ref
+                                    .read(TodoItemsProvider.notifier)
+                                    .addTodoItem(
+                                        projectId: _projectId!,
+                                        todoItemName: value);
+                                todos.remove(null);
                                 _todoTextController.clear();
                               });
                             },

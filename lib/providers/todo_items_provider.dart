@@ -13,13 +13,14 @@ import 'package:todo_app/models/todo_item_model.dart';
  */
 
 class TodoItemsNotifire extends StateNotifier<List<TodoItem>> {
-  TodoItemsNotifire() : super([]);
+  TodoItemsNotifire()
+      : super([TodoItem(name: 'Default Todo', projectId: '0000', postion: 0)]);
 
-  bool addTodoItem({required String todoItemName, required String parentId}) {
+  bool addTodoItem({required String todoItemName, required String projectId}) {
     final currentListLength = state.length;
     final tempTodoProject = TodoItem(
       name: todoItemName,
-      parentId: parentId,
+      projectId: projectId,
       postion: currentListLength,
     );
 
@@ -28,6 +29,6 @@ class TodoItemsNotifire extends StateNotifier<List<TodoItem>> {
   }
 }
 
-final todoProjectsProvider =
+final TodoItemsProvider =
     StateNotifierProvider<TodoItemsNotifire, List<TodoItem>>(
         (ref) => TodoItemsNotifire());

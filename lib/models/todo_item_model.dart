@@ -5,7 +5,7 @@ const uuid = Uuid();
 class TodoItem {
   TodoItem({
     required this.name,
-    required this.parentId,
+    required this.projectId,
     required this.postion,
     time,
     this.done = false,
@@ -13,7 +13,7 @@ class TodoItem {
         time = time ?? DateTime.now();
 
   final String id;
-  final String parentId;
+  final String projectId;
   String name;
   DateTime time;
   bool done;
