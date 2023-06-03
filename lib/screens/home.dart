@@ -18,7 +18,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
   bool isEdit = false;
   final _todoTextController = TextEditingController();
   List<TodoItem?> todos = [];
-  final List<Map<String, dynamic>> doneTodos = [];
+  List<TodoItem> doneTodos = [];
 
   String? _title;
   String? _projectId;
@@ -45,8 +45,10 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
     final Map<String, List> myTodos = ref.watch(todoItemsProvider);
     if (todos.isNotEmpty && todos.last == null) {
       todos = [...myTodos['active']!, null];
+      doneTodos = [...myTodos['done']!];
     } else {
       todos = [...myTodos['active']!];
+      doneTodos = [...myTodos['done']!];
     }
 
     return Scaffold(
@@ -58,7 +60,6 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                 setState(() {
                   todos.add(null);
                 });
-                print(todos.last);
               },
               icon: const Icon(Icons.add))
         ],
@@ -87,12 +88,6 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                                 final val = ref
                                     .read(todoItemsProvider.notifier)
                                     .setTodoToDone(todoId: todos[index]!.id);
-
-                                doneTodos.add({
-                                  'todo': todos[index],
-                                  'time': DateTime.now()
-                                });
-                                todos.removeAt(index);
                               });
                             },
                           ),

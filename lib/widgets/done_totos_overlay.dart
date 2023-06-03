@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:todo_app/models/todo_item_model.dart';
 
 class DoneTodosOverlay extends StatelessWidget {
   const DoneTodosOverlay({super.key, required this.doneTodos});
-  final List<Map<String, dynamic>> doneTodos;
+  final List<TodoItem> doneTodos;
 
   @override
   Widget build(BuildContext context) {
@@ -50,14 +51,14 @@ class DoneTodosOverlay extends StatelessWidget {
                   onPressed: () {},
                 ),
                 title: Text(
-                  doneTodos[index]['todo'],
+                  doneTodos[index].name,
                   style: const TextStyle(
                       color: Color.fromARGB(255, 173, 173, 173),
                       decoration: TextDecoration.lineThrough),
                 ),
                 trailing: Text(
                   DateFormat('dd-MM-yyyy – kk:mm')
-                      .format(doneTodos[index]['time']),
+                      .format(doneTodos[index].time),
                   style: const TextStyle(
                       color: Color.fromARGB(255, 173, 173, 173)),
                 ),
