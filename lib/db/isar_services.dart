@@ -23,14 +23,30 @@ class IsarService {
     isar.writeTxnSync(() => isar.todoItems.putSync(newItem));
   }
 
+  Future<List<TodoProject>> getAllProjects() async {
+    final isar = await db;
+    return await isar.todoProjects.where().findAll();
+  }
 
-  Stream<List<TodoProject> listenToProjects() async*{
-
+  //Listens to changes inside the Todo Project db
+  Stream<List<TodoProject>> listenToProjects() async* {
     final isar = await db;
 
     yield* isar.todoProjects.where().watch(fireImmediately: true);
   }
 
+  Future<void> cleanDb() async {
+    final isar = await db;
+    await isar.writeTxn(() => isar.clear());
+  }
+
+  Future<List<TodoItem>> getTodoItemsFor(TodoProject curProject) async {
+    final isar = await db;
+    return await isar.todoItems
+        .filter()
+        .todoProject((q) => q.idEqualTo(curProject.id))
+        .findAll();
+  }
 
   //NOTE: Sets up the DB at the beginning of the App
   Future<Isar> openDB() async {
