@@ -7,6 +7,7 @@ import 'package:todo_app/providers/todo_projects_provider.dart';
 import 'package:todo_app/widgets/done_todes.dart';
 import 'package:todo_app/widgets/side_drawer.dart';
 import 'package:todo_app/db/isar_services.dart';
+import 'package:todo_app/db/todo_item_db.dart' as item_db;
 
 class MyHomePage extends ConsumerStatefulWidget {
   const MyHomePage({super.key});
@@ -124,11 +125,14 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                                   return;
                                 }
 
-                                ref
+                                service.saveTodoItem(
+                                    item_db.TodoItem()..todo = value);
+
+                                /* ref
                                     .read(todoItemsProvider.notifier)
                                     .addTodoItem(
                                         projectId: _projectId!,
-                                        todoItemName: value);
+                                        todoItemName: value); */
                                 todos.remove(null);
                                 _todoTextController.clear();
                               });

@@ -17,6 +17,21 @@ class IsarService {
     isar.writeTxnSync(() => isar.todoProjects.putSync(newProject));
   }
 
+  Future<void> saveTodoItem(TodoItem newItem) async {
+    final isar = await db;
+
+    isar.writeTxnSync(() => isar.todoItems.putSync(newItem));
+  }
+
+
+  Stream<List<TodoProject> listenToProjects() async*{
+
+    final isar = await db;
+
+    yield* isar.todoProjects.where().watch(fireImmediately: true);
+  }
+
+
   //NOTE: Sets up the DB at the beginning of the App
   Future<Isar> openDB() async {
     final dir = await getApplicationDocumentsDirectory();
