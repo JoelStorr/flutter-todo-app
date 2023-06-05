@@ -169,8 +169,9 @@ class IsarService {
     final isar = await db;
     return await isar.todoItems
         .filter()
-        .doneEqualTo(true)
         .todoProject((q) => q.idEqualTo(curProject.id))
+        .and()
+        .doneEqualTo(true)
         .findAll();
   }
 
