@@ -31,13 +31,7 @@ class IsarService {
   //Listens to changes inside the Todo Project db
   Stream<List<TodoProject>> listenToProjects() async* {
     final isar = await db;
-
     yield* isar.todoProjects.where().watch(fireImmediately: true);
-  }
-
-  Future<void> cleanDb() async {
-    final isar = await db;
-    await isar.writeTxn(() => isar.clear());
   }
 
   Future<List<TodoItem>> getTodoItemsFor(TodoProject curProject) async {
@@ -46,6 +40,30 @@ class IsarService {
         .filter()
         .todoProject((q) => q.idEqualTo(curProject.id))
         .findAll();
+  }
+
+  Future<List<TodoItem>> getActiveTodoItemsFor(TodoProject curProject) async {
+    final isar = await db;
+    return await isar.todoItems
+        .filter()
+        .doneEqualTo(false)
+        .todoProject((q) => q.idEqualTo(curProject.id))
+        .findAll();
+  }
+
+  Future<List<TodoItem>> getDoneTodoItemsFor(TodoProject curProject) async {
+    final isar = await db;
+    return await isar.todoItems
+        .filter()
+        .doneEqualTo(true)
+        .todoProject((q) => q.idEqualTo(curProject.id))
+        .findAll();
+  }
+
+/* NOTE: Drops Database */
+  Future<void> cleanDb() async {
+    final isar = await db;
+    await isar.writeTxn(() => isar.clear());
   }
 
   //NOTE: Sets up the DB at the beginning of the App
