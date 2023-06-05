@@ -160,9 +160,8 @@ class IsarService {
         .filter()
         .todoProject((q) => q.idEqualTo(curProject.id))
         .and()
-        .doneEqualTo(null)
-        .or()
-        .doneEqualTo(false)
+        .not()
+        .doneEqualTo(true)
         .watch(fireImmediately: true);
   }
 
