@@ -54,7 +54,11 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
         actions: [
           IconButton(
               onPressed: () {
-                setState(() {});
+                setState(() {
+                  service.saveTodoItem(TodoItem()
+                    ..todo = ''
+                    ..todoProject.value = _curProject);
+                });
               },
               icon: const Icon(Icons.add))
         ],
@@ -77,12 +81,13 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                             itemBuilder: (ctx, index) {
                               return snapshot.data![index].done == null
                                   ? ListTile(
-                                      key: Key(index.toString()),
+                                      key: Key(
+                                          snapshot.data![index].id.toString()),
                                       leading: IconButton(
                                         icon: const Icon(Icons.square),
                                         onPressed: () {
                                           setState(() {
-                                            //TODO: Add new Empty todo item to db
+                                            //TODO: Chnage State from active to done
                                           });
                                         },
                                       ),

@@ -79,15 +79,18 @@ class IsarService {
     yield* isar.todoProjects.where().watch(fireImmediately: true);
   }
 
-  Stream<List<TodoItem>>? listenActiveTodoItemsFor(
+  Stream<List<TodoItem>> listenActiveTodoItemsFor(
       TodoProject curProject) async* {
     final isar = await db;
     yield* isar.todoItems
         .where()
         .filter()
-        .doneEqualTo(false)
         .todoProject((q) => q.idEqualTo(curProject.id))
-        .watch();
+        .and()
+        .doneEqualTo(null)
+        .or()
+        .doneEqualTo(false)
+        .watch(fireImmediately: true);
   }
 
   Future<List<TodoItem>> getDoneTodoItemsFor(TodoProject curProject) async {
