@@ -84,13 +84,8 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                                       key: Key(
                                           snapshot.data![index].id.toString()),
                                       leading: IconButton(
-                                        icon: const Icon(Icons.square),
-                                        onPressed: () {
-                                          setState(() {
-                                            //TODO: Chnage State from active to done
-                                          });
-                                        },
-                                      ),
+                                          icon: const Icon(Icons.square),
+                                          onPressed: () {}),
                                       title: TextField(
                                         controller: _todoTextController,
                                         onSubmitted: (String value) {
@@ -116,8 +111,12 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                                       leading: IconButton(
                                         icon: const Icon(Icons.square),
                                         onPressed: () {
+                                          //TODO: Set Todo Status
                                           setState(() {
-                                            //TODO: Set Todo Status
+                                            //TODO: Chnage State from active to done
+                                            service.editTodoState(
+                                                id: snapshot.data![index].id,
+                                                status: true);
                                           });
                                         },
                                       ),
@@ -127,6 +126,8 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                                         onPressed: () {
                                           setState(() {
                                             //TODO: Remove element form DB
+                                            service.deleteElement(
+                                                snapshot.data![index].id);
                                           });
                                         },
                                       ),

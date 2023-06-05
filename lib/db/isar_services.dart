@@ -12,6 +12,9 @@ class IsarService {
     db = openDB();
   }
 
+  //NOTE:-----------------------------------------------------------------------
+  //NOTE: Initialize DB for Start
+
   Future<TodoProject> dbSetup() async {
     final TodoProject baseProject = TodoProject()..title = 'Todo';
 
@@ -35,6 +38,9 @@ class IsarService {
     return baseItem;
   }
 
+  //NOTE:-----------------------------------------------------------------------
+  //NOTE: Add Elements
+
   //You pase in the TodoProject modle when you call the Function you use the Collectiosn for that
   Future<int> saveTodoProject(TodoProject newProject) async {
     final isar = await db;
@@ -48,6 +54,7 @@ class IsarService {
     isar.writeTxnSync(() => isar.todoItems.putSync(newItem));
   }
 
+  //NOTE: Edit Elements
   Future<void> editTodoItem(
       {required int id, required String todo, required bool status}) async {
     final isar = await db;
@@ -62,6 +69,38 @@ class IsarService {
       isar.todoItems.putSync(modifyTodo);
     });
   }
+
+  //NOTE: Edit Todo State
+  Future<void> editTodoState({required int id, required bool status}) async {
+    final isar = await db;
+    TodoItem? modifyTodo = await isar.todoItems.get(id);
+    isar.writeTxnSync(() async {
+      if (modifyTodo == null) {
+        return;
+      }
+
+      modifyTodo.done = status;
+
+      isar.todoItems.putSync(modifyTodo);
+    });
+  }
+
+  // NOTE: Delete Elements
+  Future<void> deleteElement(int id, {bool project = false}) async {
+    final isar = await db;
+    isar.writeTxnSync(
+      () async {
+        if (project) {
+          isar.todoProjects.deleteSync(id);
+        } else {
+          isar.todoItems.deleteSync(id);
+        }
+      },
+    );
+  }
+
+  //NOTE:-----------------------------------------------------------------------
+  //NOTE: Getters
 
   Future<TodoProject?> getProject({int? id}) async {
     final isar = await db;
@@ -86,7 +125,8 @@ class IsarService {
         .findAll();
   }
 
-/* NOTE: Listeners  */
+//NOTE:-----------------------------------------------------------------------
+// NOTE: Listeners
 
   //Listens to changes inside the Todo Project db
   Stream<List<TodoProject>> listenToProjects() async* {
@@ -117,6 +157,7 @@ class IsarService {
         .findAll();
   }
 
+//NOTE:-----------------------------------------------------------------------
 /* NOTE: Drops Database */
   Future<void> cleanDb() async {
     final isar = await db;
