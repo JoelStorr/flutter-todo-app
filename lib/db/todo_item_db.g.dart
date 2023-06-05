@@ -17,8 +17,13 @@ const TodoItemSchema = CollectionSchema(
   name: r'TodoItem',
   id: 2911115524195791711,
   properties: {
-    r'todo': PropertySchema(
+    r'done': PropertySchema(
       id: 0,
+      name: r'done',
+      type: IsarType.bool,
+    ),
+    r'todo': PropertySchema(
+      id: 1,
       name: r'todo',
       type: IsarType.string,
     )
@@ -60,7 +65,8 @@ void _todoItemSerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeString(offsets[0], object.todo);
+  writer.writeBool(offsets[0], object.done);
+  writer.writeString(offsets[1], object.todo);
 }
 
 TodoItem _todoItemDeserialize(
@@ -70,8 +76,9 @@ TodoItem _todoItemDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = TodoItem();
+  object.done = reader.readBool(offsets[0]);
   object.id = id;
-  object.todo = reader.readString(offsets[0]);
+  object.todo = reader.readString(offsets[1]);
   return object;
 }
 
@@ -83,6 +90,8 @@ P _todoItemDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
+      return (reader.readBool(offset)) as P;
+    case 1:
       return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -180,6 +189,16 @@ extension TodoItemQueryWhere on QueryBuilder<TodoItem, TodoItem, QWhereClause> {
 
 extension TodoItemQueryFilter
     on QueryBuilder<TodoItem, TodoItem, QFilterCondition> {
+  QueryBuilder<TodoItem, TodoItem, QAfterFilterCondition> doneEqualTo(
+      bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'done',
+        value: value,
+      ));
+    });
+  }
+
   QueryBuilder<TodoItem, TodoItem, QAfterFilterCondition> idEqualTo(Id value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -383,6 +402,18 @@ extension TodoItemQueryLinks
 }
 
 extension TodoItemQuerySortBy on QueryBuilder<TodoItem, TodoItem, QSortBy> {
+  QueryBuilder<TodoItem, TodoItem, QAfterSortBy> sortByDone() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'done', Sort.asc);
+    });
+  }
+
+  QueryBuilder<TodoItem, TodoItem, QAfterSortBy> sortByDoneDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'done', Sort.desc);
+    });
+  }
+
   QueryBuilder<TodoItem, TodoItem, QAfterSortBy> sortByTodo() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'todo', Sort.asc);
@@ -398,6 +429,18 @@ extension TodoItemQuerySortBy on QueryBuilder<TodoItem, TodoItem, QSortBy> {
 
 extension TodoItemQuerySortThenBy
     on QueryBuilder<TodoItem, TodoItem, QSortThenBy> {
+  QueryBuilder<TodoItem, TodoItem, QAfterSortBy> thenByDone() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'done', Sort.asc);
+    });
+  }
+
+  QueryBuilder<TodoItem, TodoItem, QAfterSortBy> thenByDoneDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'done', Sort.desc);
+    });
+  }
+
   QueryBuilder<TodoItem, TodoItem, QAfterSortBy> thenById() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.asc);
@@ -425,6 +468,12 @@ extension TodoItemQuerySortThenBy
 
 extension TodoItemQueryWhereDistinct
     on QueryBuilder<TodoItem, TodoItem, QDistinct> {
+  QueryBuilder<TodoItem, TodoItem, QDistinct> distinctByDone() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'done');
+    });
+  }
+
   QueryBuilder<TodoItem, TodoItem, QDistinct> distinctByTodo(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -438,6 +487,12 @@ extension TodoItemQueryProperty
   QueryBuilder<TodoItem, int, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'id');
+    });
+  }
+
+  QueryBuilder<TodoItem, bool, QQueryOperations> doneProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'done');
     });
   }
 

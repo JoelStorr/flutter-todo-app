@@ -8,5 +8,6 @@ part 'todo_item_db.g.dart';
 class TodoItem {
   Id id = Isar.autoIncrement;
   late String todo;
+  bool done = false;
   final todoProject = IsarLink<TodoProject>();
 }
