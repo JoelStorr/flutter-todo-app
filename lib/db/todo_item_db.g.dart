@@ -76,7 +76,7 @@ TodoItem _todoItemDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = TodoItem();
-  object.done = reader.readBool(offsets[0]);
+  object.done = reader.readBoolOrNull(offsets[0]);
   object.id = id;
   object.todo = reader.readString(offsets[1]);
   return object;
@@ -90,7 +90,7 @@ P _todoItemDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (reader.readBool(offset)) as P;
+      return (reader.readBoolOrNull(offset)) as P;
     case 1:
       return (reader.readString(offset)) as P;
     default:
@@ -189,8 +189,24 @@ extension TodoItemQueryWhere on QueryBuilder<TodoItem, TodoItem, QWhereClause> {
 
 extension TodoItemQueryFilter
     on QueryBuilder<TodoItem, TodoItem, QFilterCondition> {
+  QueryBuilder<TodoItem, TodoItem, QAfterFilterCondition> doneIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'done',
+      ));
+    });
+  }
+
+  QueryBuilder<TodoItem, TodoItem, QAfterFilterCondition> doneIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'done',
+      ));
+    });
+  }
+
   QueryBuilder<TodoItem, TodoItem, QAfterFilterCondition> doneEqualTo(
-      bool value) {
+      bool? value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'done',
@@ -490,7 +506,7 @@ extension TodoItemQueryProperty
     });
   }
 
-  QueryBuilder<TodoItem, bool, QQueryOperations> doneProperty() {
+  QueryBuilder<TodoItem, bool?, QQueryOperations> doneProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'done');
     });
