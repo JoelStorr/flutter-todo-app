@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-/* import 'package:todo_app/models/todo_project_model.dart'; */
-import 'package:todo_app/providers/todo_projects_provider.dart';
 
 //NOTE: For DB
-import 'package:todo_app/db/todo_project_db.dart' as todo_project_db;
+import 'package:todo_app/db/todo_project_db.dart';
 import 'package:todo_app/db/isar_services.dart';
-
-import '../db/todo_project_db.dart';
 
 class MySideDrawer extends ConsumerStatefulWidget {
   const MySideDrawer(this.services, {super.key, required this.currProject});
@@ -73,48 +69,50 @@ class _MySideDrawerState extends ConsumerState<MySideDrawer> {
                 itemCount: snapshot.hasData ? snapshot.data!.length : 0,
                 itemBuilder: (ctx, index) {
                   if (snapshot.hasData) {
-                    return GestureDetector(
-                      onTap: () {
-                        widget.currProject(snapshot.data![index]);
-                        Navigator.of(context).pop();
-                      },
-                      child: ListTile(
-                        leading: const Icon(
-                          Icons.list,
-                          size: 26,
-                          color: Colors.white70,
+                    if (snapshot.data![index].fullyAdded) {
+                      return GestureDetector(
+                        onTap: () {
+                          widget.currProject(snapshot.data![index]);
+                          Navigator.of(context).pop();
+                        },
+                        child: ListTile(
+                          leading: const Icon(
+                            Icons.list,
+                            size: 26,
+                            color: Colors.white70,
+                          ),
+                          title: Text(snapshot.data![index].title),
                         ),
-                        title: Text(snapshot.data![index].title),
-                      ),
-                    );
+                      );
+                    } else {
+                      return ListTile(
+                        leading: const Icon(Icons.edit),
+                        title: TextField(
+                          controller: _listTextController,
+                          onSubmitted: (String value) {
+                            setState(() {
+                              if (value.trim().isEmpty) {
+                                _listTextController.clear();
+                                return;
+                              }
+
+                              widget.services.editTodoProject(
+                                id: snapshot.data![index].id,
+                                title: value,
+                              );
+
+                              _todoList.remove(null);
+                              _listTextController.clear();
+                            });
+                          },
+                          autofocus: true,
+                        ),
+                      );
+                    }
                   } else {
-                    return null;
-
-                    /* return ListTile(
-                    leading: const Icon(Icons.edit),
-                    title: TextField(
-                      controller: _listTextController,
-                      onSubmitted: (String value) {
-                        setState(() {
-                          if (value.trim().isEmpty) {
-                            _todoList.remove(null);
-                            _listTextController.clear();
-                            return;
-                          }
-
-                          widget.services.saveTodoProject(
-                              todo_project_db.TodoProject()..title = value);
-
-                          /* ref
-                              .read(todoProjectsProvider.notifier)
-                              .addTodoProject(todoProjectName: value); */
-                          _todoList.remove(null);
-                          _listTextController.clear();
-                        });
-                      },
-                      autofocus: true,
-                    ),
-                  ); */
+                    return const SizedBox(
+                      height: 0.2,
+                    );
                   }
                 },
               ),
@@ -124,7 +122,7 @@ class _MySideDrawerState extends ConsumerState<MySideDrawer> {
             child: TextButton.icon(
               onPressed: () {
                 setState(() {
-                  _todoList.add(null);
+                  widget.services.saveTodoProject(TodoProject()..title = '');
                 });
               },
               icon: const Icon(
