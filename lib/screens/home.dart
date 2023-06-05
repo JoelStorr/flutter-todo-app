@@ -8,6 +8,7 @@ import 'package:todo_app/widgets/done_todes.dart';
 import 'package:todo_app/widgets/side_drawer.dart';
 import 'package:todo_app/db/isar_services.dart';
 import 'package:todo_app/db/todo_item_db.dart' as item_db;
+import 'package:todo_app/db/todo_project_db.dart' as project_db;
 
 class MyHomePage extends ConsumerStatefulWidget {
   const MyHomePage({super.key});
@@ -22,13 +23,11 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
   List<TodoItem?> todos = [];
   List<TodoItem> doneTodos = [];
 
-  String? _title;
-  String? _projectId;
+  project_db.TodoProject? _curProject;
   final service = IsarService();
-  void onChnageTitle(TodoProject project) {
+  void onChnageTitle(project_db.TodoProject project) {
     setState(() {
-      _title = project.name;
-      _projectId = project.id;
+      _curProject = project;
     });
   }
 
@@ -40,10 +39,6 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final List<TodoProject> defaultProject = ref.read(todoProjectsProvider);
-    _title ??= defaultProject[0].name;
-    _projectId ??= defaultProject[0].id;
-
     final Map<String, List> myTodos = ref.watch(todoItemsProvider);
     if (todos.isNotEmpty && todos.last == null) {
       todos = [...myTodos['active']!, null];
@@ -55,7 +50,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(_title!),
+        title: Text(_curProject != null ? _curProject!.title : 'demo'),
         actions: [
           IconButton(
               onPressed: () {
