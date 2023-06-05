@@ -48,6 +48,21 @@ class IsarService {
     isar.writeTxnSync(() => isar.todoItems.putSync(newItem));
   }
 
+  Future<void> editTodoItem(
+      {required int id, required String todo, required bool status}) async {
+    final isar = await db;
+    TodoItem? modifyTodo = await isar.todoItems.get(id);
+    isar.writeTxnSync(() async {
+      if (modifyTodo == null) {
+        return;
+      }
+      modifyTodo.todo = todo;
+      modifyTodo.done = status;
+
+      isar.todoItems.putSync(modifyTodo);
+    });
+  }
+
   Future<TodoProject?> getProject({int? id}) async {
     final isar = await db;
 

@@ -96,16 +96,14 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                                         onSubmitted: (String value) {
                                           setState(() {
                                             if (value.trim().isEmpty) {
-                                              /* todos.remove(null); */
                                               _todoTextController.clear();
                                               return;
                                             }
 
-                                            service.saveTodoItem(TodoItem()
-                                              ..todo = value
-                                              ..done = false
-                                              ..todoProject.value =
-                                                  _curProject);
+                                            service.editTodoItem(
+                                                id: snapshot.data![index].id,
+                                                todo: value,
+                                                status: false);
 
                                             _todoTextController.clear();
                                           });
