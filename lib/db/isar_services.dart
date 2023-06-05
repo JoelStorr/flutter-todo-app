@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:isar/isar.dart';
 import 'package:todo_app/db/todo_item_db.dart';
 import 'package:todo_app/db/todo_project_db.dart';
@@ -10,17 +12,52 @@ class IsarService {
     db = openDB();
   }
 
-  //You pase in the TodoProject modle when you call the Function you use the Collectiosn for that
-  Future<void> saveTodoProject(TodoProject newProject) async {
+  Future<TodoProject> dbSetup() async {
     final isar = await db;
 
-    isar.writeTxnSync(() => isar.todoProjects.putSync(newProject));
+    final TodoProject baseProject = TodoProject()..title = 'Todo';
+
+    final temProject = await getAllProjects();
+
+    if (temProject.isEmpty) {
+      final id = await saveTodoProject(baseProject);
+      final item = await getProject(id: id);
+      if (item == null) {
+        throw Error();
+      }
+
+      return item;
+    }
+
+    final baseItem = await getProject();
+    if (baseItem == null) {
+      throw Error();
+    }
+
+    return baseItem;
+  }
+
+  //You pase in the TodoProject modle when you call the Function you use the Collectiosn for that
+  Future<int> saveTodoProject(TodoProject newProject) async {
+    final isar = await db;
+
+    return isar.writeTxnSync(() => isar.todoProjects.putSync(newProject));
   }
 
   Future<void> saveTodoItem(TodoItem newItem) async {
     final isar = await db;
 
     isar.writeTxnSync(() => isar.todoItems.putSync(newItem));
+  }
+
+  Future<TodoProject?> getProject({int? id}) async {
+    final isar = await db;
+
+    if (id == null) {
+      return await isar.todoProjects.where().findFirst();
+    } else {
+      return await isar.todoProjects.where().idEqualTo(id).findFirst();
+    }
   }
 
   Future<List<TodoProject>> getAllProjects() async {
@@ -42,13 +79,15 @@ class IsarService {
         .findAll();
   }
 
-  Future<List<TodoItem>> getActiveTodoItemsFor(TodoProject curProject) async {
+  Stream<List<TodoItem>> listenActiveTodoItemsFor(
+      TodoProject curProject) async* {
     final isar = await db;
-    return await isar.todoItems
+    yield* isar.todoItems
+        .where()
         .filter()
         .doneEqualTo(false)
         .todoProject((q) => q.idEqualTo(curProject.id))
-        .findAll();
+        .watch(fireImmediately: true);
   }
 
   Future<List<TodoItem>> getDoneTodoItemsFor(TodoProject curProject) async {

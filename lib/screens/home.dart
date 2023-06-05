@@ -31,6 +31,8 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
     });
   }
 
+  //NOTE: Default Isa TodoPRoject entrie
+
   @override
   void dispose() {
     _todoTextController.dispose();
@@ -46,6 +48,14 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
     } else {
       todos = [...myTodos['active']!];
       doneTodos = [...myTodos['done']!];
+    }
+
+    if (_curProject == null) {
+      service.dbSetup().then((value) {
+        setState(() {
+          _curProject = value;
+        });
+      });
     }
 
     return Scaffold(
@@ -120,8 +130,9 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                                   return;
                                 }
 
-                                service.saveTodoItem(
-                                    item_db.TodoItem()..todo = value);
+                                service.saveTodoItem(item_db.TodoItem()
+                                  ..todo = value
+                                  ..todoProject.value = _curProject);
 
                                 /* ref
                                     .read(todoItemsProvider.notifier)
