@@ -6,7 +6,7 @@ part 'todo_project_db.g.dart';
 class TodoProject {
   Id id = Isar.autoIncrement;
   late String title;
-
+  bool fullyAdded = false;
   @Backlink(to: 'todoProject')
   final todoItem = IsarLink<TodoItem>();
 }

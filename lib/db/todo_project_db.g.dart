@@ -17,8 +17,13 @@ const TodoProjectSchema = CollectionSchema(
   name: r'TodoProject',
   id: 3054284265679259146,
   properties: {
-    r'title': PropertySchema(
+    r'fullyAdded': PropertySchema(
       id: 0,
+      name: r'fullyAdded',
+      type: IsarType.bool,
+    ),
+    r'title': PropertySchema(
+      id: 1,
       name: r'title',
       type: IsarType.string,
     )
@@ -61,7 +66,8 @@ void _todoProjectSerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeString(offsets[0], object.title);
+  writer.writeBool(offsets[0], object.fullyAdded);
+  writer.writeString(offsets[1], object.title);
 }
 
 TodoProject _todoProjectDeserialize(
@@ -71,8 +77,9 @@ TodoProject _todoProjectDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = TodoProject();
+  object.fullyAdded = reader.readBool(offsets[0]);
   object.id = id;
-  object.title = reader.readString(offsets[0]);
+  object.title = reader.readString(offsets[1]);
   return object;
 }
 
@@ -84,6 +91,8 @@ P _todoProjectDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
+      return (reader.readBool(offset)) as P;
+    case 1:
       return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -184,6 +193,16 @@ extension TodoProjectQueryWhere
 
 extension TodoProjectQueryFilter
     on QueryBuilder<TodoProject, TodoProject, QFilterCondition> {
+  QueryBuilder<TodoProject, TodoProject, QAfterFilterCondition>
+      fullyAddedEqualTo(bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'fullyAdded',
+        value: value,
+      ));
+    });
+  }
+
   QueryBuilder<TodoProject, TodoProject, QAfterFilterCondition> idEqualTo(
       Id value) {
     return QueryBuilder.apply(this, (query) {
@@ -392,6 +411,18 @@ extension TodoProjectQueryLinks
 
 extension TodoProjectQuerySortBy
     on QueryBuilder<TodoProject, TodoProject, QSortBy> {
+  QueryBuilder<TodoProject, TodoProject, QAfterSortBy> sortByFullyAdded() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'fullyAdded', Sort.asc);
+    });
+  }
+
+  QueryBuilder<TodoProject, TodoProject, QAfterSortBy> sortByFullyAddedDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'fullyAdded', Sort.desc);
+    });
+  }
+
   QueryBuilder<TodoProject, TodoProject, QAfterSortBy> sortByTitle() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'title', Sort.asc);
@@ -407,6 +438,18 @@ extension TodoProjectQuerySortBy
 
 extension TodoProjectQuerySortThenBy
     on QueryBuilder<TodoProject, TodoProject, QSortThenBy> {
+  QueryBuilder<TodoProject, TodoProject, QAfterSortBy> thenByFullyAdded() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'fullyAdded', Sort.asc);
+    });
+  }
+
+  QueryBuilder<TodoProject, TodoProject, QAfterSortBy> thenByFullyAddedDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'fullyAdded', Sort.desc);
+    });
+  }
+
   QueryBuilder<TodoProject, TodoProject, QAfterSortBy> thenById() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.asc);
@@ -434,6 +477,12 @@ extension TodoProjectQuerySortThenBy
 
 extension TodoProjectQueryWhereDistinct
     on QueryBuilder<TodoProject, TodoProject, QDistinct> {
+  QueryBuilder<TodoProject, TodoProject, QDistinct> distinctByFullyAdded() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'fullyAdded');
+    });
+  }
+
   QueryBuilder<TodoProject, TodoProject, QDistinct> distinctByTitle(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -447,6 +496,12 @@ extension TodoProjectQueryProperty
   QueryBuilder<TodoProject, int, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'id');
+    });
+  }
+
+  QueryBuilder<TodoProject, bool, QQueryOperations> fullyAddedProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'fullyAdded');
     });
   }
 
