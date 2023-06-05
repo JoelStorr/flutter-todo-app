@@ -13,8 +13,6 @@ class IsarService {
   }
 
   Future<TodoProject> dbSetup() async {
-    final isar = await db;
-
     final TodoProject baseProject = TodoProject()..title = 'Todo';
 
     final temProject = await getAllProjects();
