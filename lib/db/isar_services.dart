@@ -16,7 +16,9 @@ class IsarService {
   //NOTE: Initialize DB for Start
 
   Future<TodoProject> dbSetup() async {
-    final TodoProject baseProject = TodoProject()..title = 'Todo';
+    final TodoProject baseProject = TodoProject()
+      ..title = 'Todo'
+      ..fullyAdded = true;
 
     final temProject = await getAllProjects();
 
@@ -45,7 +47,9 @@ class IsarService {
   Future<int> saveTodoProject(TodoProject newProject) async {
     final isar = await db;
 
-    return isar.writeTxnSync(() => isar.todoProjects.putSync(newProject));
+    return isar.writeTxnSync(() {
+      return isar.todoProjects.putSync(newProject);
+    });
   }
 
   Future<void> saveTodoItem(TodoItem newItem) async {
@@ -55,6 +59,20 @@ class IsarService {
   }
 
   //NOTE: Edit Elements
+  Future<void> editTodoProject({required int id, required String title}) async {
+    final isar = await db;
+    TodoProject? modifyTodo = await isar.todoProjects.get(id);
+    isar.writeTxnSync(() async {
+      if (modifyTodo == null) {
+        return;
+      }
+      modifyTodo.title = title;
+      modifyTodo.fullyAdded = true;
+
+      isar.todoProjects.putSync(modifyTodo);
+    });
+  }
+
   Future<void> editTodoItem(
       {required int id, required String todo, required bool status}) async {
     final isar = await db;
