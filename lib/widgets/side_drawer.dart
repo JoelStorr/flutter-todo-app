@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:todo_app/models/todo_project_model.dart';
+/* import 'package:todo_app/models/todo_project_model.dart'; */
 import 'package:todo_app/providers/todo_projects_provider.dart';
 
 //NOTE: For DB
 import 'package:todo_app/db/todo_project_db.dart' as todo_project_db;
 import 'package:todo_app/db/isar_services.dart';
+
+import '../db/todo_project_db.dart';
 
 class MySideDrawer extends ConsumerStatefulWidget {
   const MySideDrawer(this.services, {super.key, required this.currProject});
@@ -22,13 +24,18 @@ class _MySideDrawerState extends ConsumerState<MySideDrawer> {
   final _listTextController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    final List<TodoProject> myTodoLists = ref.watch(todoProjectsProvider);
+    /* final List<TodoProject> myTodoLists = ref.watch(todoProjectsProvider); */
+
+    final Future<List<TodoProject>> myTodoLists =
+        widget.services.getAllProjects();
+
+    print(myTodoLists);
 
     /* NOTE: Null List State should be handled in Component */
     if (_todoList.isNotEmpty && _todoList.last == null) {
-      _todoList = [...myTodoLists, null];
+      _todoList = [null];
     } else {
-      _todoList = [...myTodoLists];
+      _todoList = [];
     }
 
     return Drawer(
@@ -60,26 +67,30 @@ class _MySideDrawerState extends ConsumerState<MySideDrawer> {
           ),
           Expanded(
             flex: 4,
-            child: ListView.builder(
-              itemCount: _todoList.length,
-              itemBuilder: (context, index) {
-                if (_todoList[index] != null) {
-                  return GestureDetector(
-                    onTap: () {
-                      widget.currProject(_todoList[index]!);
-                      Navigator.of(context).pop();
-                    },
-                    child: ListTile(
-                      leading: const Icon(
-                        Icons.list,
-                        size: 26,
-                        color: Colors.white70,
+            child: StreamBuilder<List<TodoProject>>(
+              stream: widget.services.listenToProjects(),
+              builder: (context, snapshot) => ListView.builder(
+                itemCount: snapshot.hasData ? snapshot.data!.length : 0,
+                itemBuilder: (ctx, index) {
+                  if (snapshot.hasData) {
+                    return GestureDetector(
+                      onTap: () {
+                        widget.currProject(snapshot.data![index]);
+                        Navigator.of(context).pop();
+                      },
+                      child: ListTile(
+                        leading: const Icon(
+                          Icons.list,
+                          size: 26,
+                          color: Colors.white70,
+                        ),
+                        title: Text(snapshot.data![index].title),
                       ),
-                      title: Text(_todoList[index]!.name),
-                    ),
-                  );
-                } else {
-                  return ListTile(
+                    );
+                  } else {
+                    return null;
+
+                    /* return ListTile(
                     leading: const Icon(Icons.edit),
                     title: TextField(
                       controller: _listTextController,
@@ -103,9 +114,10 @@ class _MySideDrawerState extends ConsumerState<MySideDrawer> {
                       },
                       autofocus: true,
                     ),
-                  );
-                }
-              },
+                  ); */
+                  }
+                },
+              ),
             ),
           ),
           SafeArea(
