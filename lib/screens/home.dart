@@ -74,78 +74,63 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                         builder: (context, snapshot) => ListView.builder(
                             itemCount:
                                 snapshot.hasData ? snapshot.data!.length : 0,
-                            itemBuilder: (ctx, index) {}),
+                            itemBuilder: (ctx, index) {
+                              return snapshot.data![index].done == null
+                                  ? ListTile(
+                                      key: Key(index.toString()),
+                                      leading: IconButton(
+                                        icon: const Icon(Icons.square),
+                                        onPressed: () {
+                                          setState(() {
+                                            //TODO: Add new Empty todo item to db
+                                          });
+                                        },
+                                      ),
+                                      title: TextField(
+                                        controller: _todoTextController,
+                                        onSubmitted: (String value) {
+                                          setState(() {
+                                            if (value.trim().isEmpty) {
+                                              /* todos.remove(null); */
+                                              _todoTextController.clear();
+                                              return;
+                                            }
+
+                                            service.saveTodoItem(TodoItem()
+                                              ..todo = value
+                                              ..done = false
+                                              ..todoProject.value =
+                                                  _curProject);
+
+                                            _todoTextController.clear();
+                                          });
+                                        },
+                                        autofocus: true,
+                                      ),
+                                    )
+                                  : ListTile(
+                                      key: Key(index.toString()),
+                                      leading: IconButton(
+                                        icon: const Icon(Icons.square),
+                                        onPressed: () {
+                                          setState(() {
+                                            //TODO: Set Todo Status
+                                          });
+                                        },
+                                      ),
+                                      title: Text(snapshot.data![index].todo),
+                                      trailing: IconButton(
+                                        icon: const Icon(Icons.delete),
+                                        onPressed: () {
+                                          setState(() {
+                                            //TODO: Remove element form DB
+                                          });
+                                        },
+                                      ),
+                                    );
+                            }),
                       )
-                    : const Text('No data found')
-
-                /* ListView.builder(
-                scrollDirection: Axis.vertical,
-                shrinkWrap: true,
-                itemCount: todos.length,
-                itemBuilder: (ctx, index) {
-                  return todos[index] != null
-                      /* NOTE: Dispaly Todos */
-                      ? ListTile(
-                          key: Key(index.toString()),
-                          leading: IconButton(
-                            icon: const Icon(Icons.square),
-                            onPressed: () {
-                              setState(() {
-                                ref
-                                    .read(todoItemsProvider.notifier)
-                                    .setTodoToDone(todoId: todos[index]!.id);
-                              });
-                            },
-                          ),
-                          title: Text(todos[index]!.name),
-                          trailing: IconButton(
-                            icon: const Icon(Icons.delete),
-                            onPressed: () {
-                              setState(() {
-                                ref
-                                    .read(todoItemsProvider.notifier)
-                                    .deleteTodo(todoId: todos[index]!.id);
-                              });
-                            },
-                          ),
-                        )
-                      /* NOTE: Display Input to add Todo */
-                      : ListTile(
-                          key: Key(index.toString()),
-                          leading: IconButton(
-                            icon: const Icon(Icons.square),
-                            onPressed: () {
-                              setState(() {});
-                            },
-                          ),
-                          title: TextField(
-                            controller: _todoTextController,
-                            onSubmitted: (String value) {
-                              setState(() {
-                                if (value.trim().isEmpty) {
-                                  todos.remove(null);
-                                  _todoTextController.clear();
-                                  return;
-                                }
-
-                                service.saveTodoItem(item_db.TodoItem()
-                                  ..todo = value
-                                  ..todoProject.value = _curProject);
-
-                                /* ref
-                                    .read(todoItemsProvider.notifier)
-                                    .addTodoItem(
-                                        projectId: _projectId!,
-                                        todoItemName: value); */
-                                todos.remove(null);
-                                _todoTextController.clear();
-                              });
-                            },
-                            autofocus: true,
-                          ),
-                        );
-                }, */
-                ),
+                    : const Text('No data found')),
 
             /* NOTE: Shows Popup to display Todo History */
             const DoneTodos(),
