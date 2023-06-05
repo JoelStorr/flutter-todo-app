@@ -165,14 +165,14 @@ class IsarService {
         .watch(fireImmediately: true);
   }
 
-  Future<List<TodoItem>> getDoneTodoItemsFor(TodoProject curProject) async {
+  Stream<List<TodoItem>> listenDoneTodoItemsFor(TodoProject curProject) async* {
     final isar = await db;
-    return await isar.todoItems
+    yield* isar.todoItems
         .filter()
         .todoProject((q) => q.idEqualTo(curProject.id))
         .and()
         .doneEqualTo(true)
-        .findAll();
+        .watch(fireImmediately: true);
   }
 
 //NOTE:-----------------------------------------------------------------------

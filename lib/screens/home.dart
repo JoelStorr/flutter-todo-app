@@ -137,7 +137,8 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                     : const Text('No data found')),
 
             /* NOTE: Shows Popup to display Todo History */
-            const DoneTodos(),
+            //TODO: Pass current Project via Global State
+            const DoneTodos(currentProject: _curProject!),
           ],
         ),
       ),

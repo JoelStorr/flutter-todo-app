@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:todo_app/db/todo_project_db.dart';
 import 'package:todo_app/models/todo_item_model.dart';
 import 'package:todo_app/widgets/done_totos_overlay.dart';
 
 class DoneTodos extends StatelessWidget {
-  const DoneTodos({super.key});
+  const DoneTodos({super.key, required this.currentProject});
 
+  final TodoProject currentProject;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -12,7 +14,9 @@ class DoneTodos extends StatelessWidget {
         showBottomSheet(
           context: context,
           builder: ((context) {
-            return DoneTodosOverlay();
+            return DoneTodosOverlay(
+              currentProject: currentProject,
+            );
           }),
         );
       },
@@ -20,7 +24,9 @@ class DoneTodos extends StatelessWidget {
         showBottomSheet(
           context: context,
           builder: ((context) {
-            return DoneTodosOverlay();
+            return DoneTodosOverlay(
+              currentProject: currentProject,
+            );
           }),
         );
       },

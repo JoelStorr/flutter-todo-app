@@ -1,22 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart';
-import 'package:todo_app/models/todo_item_model.dart';
-import 'package:todo_app/providers/todo_items_provider.dart';
 
-class DoneTodosOverlay extends ConsumerStatefulWidget {
+import 'package:intl/intl.dart';
+import 'package:todo_app/db/todo_item_db.dart';
+import 'package:todo_app/db/isar_services.dart';
+import 'package:todo_app/db/todo_project_db.dart';
+
+class DoneTodosOverlay extends StatefulWidget {
   const DoneTodosOverlay({
-    super.key,
+    super.key, required this.currentProject
   });
 
+  final TodoProject currentProject;
   @override
-  ConsumerState<DoneTodosOverlay> createState() => _DoneTodosOverlayState();
+  State<DoneTodosOverlay> createState() => _DoneTodosOverlayState();
 }
 
-class _DoneTodosOverlayState extends ConsumerState<DoneTodosOverlay> {
+class _DoneTodosOverlayState extends State<DoneTodosOverlay> {
+ 
+  final service = IsarService();
+ 
   @override
   Widget build(BuildContext context) {
-    final Map<String, List> doneTodos = ref.watch(todoItemsProvider);
+   
 
     return Container(
       width: MediaQuery.of(context).size.width,
@@ -46,6 +51,12 @@ class _DoneTodosOverlayState extends ConsumerState<DoneTodosOverlay> {
           const SizedBox(
             height: 30,
           ),
+
+          StreamBuilder<List<TodoItem>>(
+              stream: service.listenDoneTodoItemsFor(curProject),
+            
+            builder: builder)
+
           ListView.builder(
             scrollDirection: Axis.vertical,
             shrinkWrap: true,
