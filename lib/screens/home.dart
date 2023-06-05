@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:todo_app/models/todo_item_model.dart';
-import 'package:todo_app/models/todo_project_model.dart';
-import 'package:todo_app/providers/todo_items_provider.dart';
-import 'package:todo_app/providers/todo_projects_provider.dart';
+/* import 'package:todo_app/models/todo_item_model.dart'; */
+/* import 'package:todo_app/models/todo_project_model.dart'; */
+/* import 'package:todo_app/providers/todo_items_provider.dart'; */
+/* import 'package:todo_app/providers/todo_projects_provider.dart'; */
 import 'package:todo_app/widgets/done_todes.dart';
 import 'package:todo_app/widgets/side_drawer.dart';
 import 'package:todo_app/db/isar_services.dart';
-import 'package:todo_app/db/todo_item_db.dart' as item_db;
-import 'package:todo_app/db/todo_project_db.dart' as project_db;
+import 'package:todo_app/db/todo_item_db.dart';
+import 'package:todo_app/db/todo_project_db.dart';
 
 class MyHomePage extends ConsumerStatefulWidget {
   const MyHomePage({super.key});
@@ -20,12 +20,10 @@ class MyHomePage extends ConsumerStatefulWidget {
 class _MyHomePageState extends ConsumerState<MyHomePage> {
   bool isEdit = false;
   final _todoTextController = TextEditingController();
-  List<TodoItem?> todos = [];
-  List<TodoItem> doneTodos = [];
 
-  project_db.TodoProject? _curProject;
+  TodoProject? _curProject;
   final service = IsarService();
-  void onChnageTitle(project_db.TodoProject project) {
+  void onChnageTitle(TodoProject project) {
     setState(() {
       _curProject = project;
     });
@@ -41,15 +39,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final Map<String, List> myTodos = ref.watch(todoItemsProvider);
-    if (todos.isNotEmpty && todos.last == null) {
-      todos = [...myTodos['active']!, null];
-      doneTodos = [...myTodos['done']!];
-    } else {
-      todos = [...myTodos['active']!];
-      doneTodos = [...myTodos['done']!];
-    }
-
+    /* NOTE: Setup Base PRoject */
     if (_curProject == null) {
       service.dbSetup().then((value) {
         setState(() {
@@ -64,9 +54,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
         actions: [
           IconButton(
               onPressed: () {
-                setState(() {
-                  todos.add(null);
-                });
+                setState(() {});
               },
               icon: const Icon(Icons.add))
         ],
@@ -80,7 +68,17 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
           mainAxisSize: MainAxisSize.max,
           children: [
             Expanded(
-              child: ListView.builder(
+                child: _curProject != null
+                    ? StreamBuilder<List<TodoItem>>(
+                        stream: service.listenActiveTodoItemsFor(_curProject!),
+                        builder: (context, snapshot) => ListView.builder(
+                            itemCount:
+                                snapshot.hasData ? snapshot.data!.length : 0,
+                            itemBuilder: (ctx, index) {}),
+                      )
+                    : const Text('No data found')
+
+                /* ListView.builder(
                 scrollDirection: Axis.vertical,
                 shrinkWrap: true,
                 itemCount: todos.length,
@@ -146,9 +144,9 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                             autofocus: true,
                           ),
                         );
-                },
-              ),
-            ),
+                }, */
+                ),
+
             /* NOTE: Shows Popup to display Todo History */
             const DoneTodos(),
           ],

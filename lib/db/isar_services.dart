@@ -65,12 +65,6 @@ class IsarService {
     return await isar.todoProjects.where().findAll();
   }
 
-  //Listens to changes inside the Todo Project db
-  Stream<List<TodoProject>> listenToProjects() async* {
-    final isar = await db;
-    yield* isar.todoProjects.where().watch(fireImmediately: true);
-  }
-
   Future<List<TodoItem>> getTodoItemsFor(TodoProject curProject) async {
     final isar = await db;
     return await isar.todoItems
@@ -79,7 +73,15 @@ class IsarService {
         .findAll();
   }
 
-  Stream<List<TodoItem>> listenActiveTodoItemsFor(
+/* NOTE: Listeners  */
+
+  //Listens to changes inside the Todo Project db
+  Stream<List<TodoProject>> listenToProjects() async* {
+    final isar = await db;
+    yield* isar.todoProjects.where().watch(fireImmediately: true);
+  }
+
+  Stream<List<TodoItem>>? listenActiveTodoItemsFor(
       TodoProject curProject) async* {
     final isar = await db;
     yield* isar.todoItems
@@ -87,7 +89,7 @@ class IsarService {
         .filter()
         .doneEqualTo(false)
         .todoProject((q) => q.idEqualTo(curProject.id))
-        .watch(fireImmediately: true);
+        .watch();
   }
 
   Future<List<TodoItem>> getDoneTodoItemsFor(TodoProject curProject) async {
