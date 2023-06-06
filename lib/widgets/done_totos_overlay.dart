@@ -1,28 +1,33 @@
 import 'package:flutter/material.dart';
-
 import 'package:intl/intl.dart';
+//NOTE: Local DB
 import 'package:todo_app/db/todo_item_db.dart';
 import 'package:todo_app/db/isar_services.dart';
 import 'package:todo_app/db/todo_project_db.dart';
+//NOTE: Global State
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:todo_app/providers/todo_projects_provider.dart';
 
-class DoneTodosOverlay extends StatefulWidget {
+class DoneTodosOverlay extends ConsumerStatefulWidget {
   const DoneTodosOverlay({
-    super.key, required this.currentProject
+    super.key,
   });
 
-  final TodoProject currentProject;
+  
   @override
-  State<DoneTodosOverlay> createState() => _DoneTodosOverlayState();
+  ConsumerState<DoneTodosOverlay> createState() => _DoneTodosOverlayState();
 }
 
-class _DoneTodosOverlayState extends State<DoneTodosOverlay> {
+class _DoneTodosOverlayState extends ConsumerState<DoneTodosOverlay> {
  
   final service = IsarService();
  
   @override
   Widget build(BuildContext context) {
-   
+  
 
+    final TodoProject currentProject = ref.watch(todoProjectsProvider);
+    
     return Container(
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height * 0.7,
@@ -53,7 +58,7 @@ class _DoneTodosOverlayState extends State<DoneTodosOverlay> {
           ),
 
           StreamBuilder<List<TodoItem>>(
-              stream: service.listenDoneTodoItemsFor(curProject),
+              stream: service.listenDoneTodoItemsFor(currentProject),
             
             builder: builder)
 
