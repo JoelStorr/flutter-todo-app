@@ -138,7 +138,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
 
             /* NOTE: Shows Popup to display Todo History */
             //TODO: Pass current Project via Global State
-            const DoneTodos(currentProject: _curProject!),
+            if (_curProject != null) DoneTodos(currentProject: _curProject!)
           ],
         ),
       ),
