@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:todo_app/providers/todo_projects_provider.dart';
 /* import 'package:todo_app/models/todo_item_model.dart'; */
 /* import 'package:todo_app/models/todo_project_model.dart'; */
 /* import 'package:todo_app/providers/todo_items_provider.dart'; */
@@ -21,13 +22,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
   bool isEdit = false;
   final _todoTextController = TextEditingController();
 
-  TodoProject? _curProject;
   final service = IsarService();
-  void onChnageTitle(TodoProject project) {
-    setState(() {
-      _curProject = project;
-    });
-  }
 
   //NOTE: Default Isa TodoPRoject entrie
 
@@ -39,8 +34,10 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    TodoProject _curProject = ref.watch(todoProjectsProvider);
+
     /* NOTE: Setup Base PRoject */
-    if (_curProject == null) {
+    if (_curProject.fullyAdded == false) {
       service.dbSetup().then((value) {
         setState(() {
           _curProject = value;
@@ -65,7 +62,6 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
       ),
       drawer: MySideDrawer(
         service,
-        currProject: onChnageTitle,
       ),
       body: SafeArea(
         child: Column(
@@ -74,7 +70,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
             Expanded(
                 child: _curProject != null
                     ? StreamBuilder<List<TodoItem>>(
-                        stream: service.listenActiveTodoItemsFor(_curProject!),
+                        stream: service.listenActiveTodoItemsFor(_curProject),
                         builder: (context, snapshot) => ListView.builder(
                             itemCount:
                                 snapshot.hasData ? snapshot.data!.length : 0,
@@ -137,8 +133,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                     : const Text('No data found')),
 
             /* NOTE: Shows Popup to display Todo History */
-            //TODO: Pass current Project via Global State
-            if (_curProject != null) DoneTodos(currentProject: _curProject!)
+            const DoneTodos()
           ],
         ),
       ),

@@ -4,11 +4,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 //NOTE: For DB
 import 'package:todo_app/db/todo_project_db.dart';
 import 'package:todo_app/db/isar_services.dart';
+import 'package:todo_app/providers/todo_projects_provider.dart';
 
 class MySideDrawer extends ConsumerStatefulWidget {
-  const MySideDrawer(this.services, {super.key, required this.currProject});
+  const MySideDrawer(this.services, {super.key});
   final IsarService services;
-  final void Function(TodoProject) currProject;
 
   @override
   ConsumerState<MySideDrawer> createState() => _MySideDrawerState();
@@ -72,7 +72,10 @@ class _MySideDrawerState extends ConsumerState<MySideDrawer> {
                     if (snapshot.data![index].fullyAdded) {
                       return GestureDetector(
                         onTap: () {
-                          widget.currProject(snapshot.data![index]);
+                          ref
+                              .read(todoProjectsProvider.notifier)
+                              .setCurrentTodoProject(
+                                  currProject: snapshot.data![index]);
                           Navigator.of(context).pop();
                         },
                         child: ListTile(
