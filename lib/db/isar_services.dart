@@ -83,6 +83,7 @@ class IsarService {
       }
       modifyTodo.todo = todo;
       modifyTodo.done = status;
+      modifyTodo.finishedAt = DateTime.now();
 
       isar.todoItems.putSync(modifyTodo);
     });

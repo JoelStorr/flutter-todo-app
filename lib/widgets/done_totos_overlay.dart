@@ -13,21 +13,17 @@ class DoneTodosOverlay extends ConsumerStatefulWidget {
     super.key,
   });
 
-  
   @override
   ConsumerState<DoneTodosOverlay> createState() => _DoneTodosOverlayState();
 }
 
 class _DoneTodosOverlayState extends ConsumerState<DoneTodosOverlay> {
- 
   final service = IsarService();
- 
+
   @override
   Widget build(BuildContext context) {
-  
-
     final TodoProject currentProject = ref.watch(todoProjectsProvider);
-    
+
     return Container(
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height * 0.7,
@@ -56,47 +52,42 @@ class _DoneTodosOverlayState extends ConsumerState<DoneTodosOverlay> {
           const SizedBox(
             height: 30,
           ),
-
           StreamBuilder<List<TodoItem>>(
-              stream: service.listenDoneTodoItemsFor(currentProject),
-            
-            builder: builder)
-
-          ListView.builder(
-            scrollDirection: Axis.vertical,
-            shrinkWrap: true,
-            itemCount: doneTodos['done']!.length,
-            itemBuilder: (ctx, index) {
-              return GestureDetector(
-                onDoubleTap: () {
-                  final val = ref
-                      .read(todoItemsProvider.notifier)
-                      .setTodoToActive(todoId: doneTodos['done']![index].id);
-                },
-                child: ListTile(
-                  key: Key(index.toString()),
-                  leading: IconButton(
-                    icon: const Icon(
-                      Icons.check,
-                      color: Colors.green,
+            stream: service.listenDoneTodoItemsFor(currentProject),
+            builder: (ctx, snapshot) => ListView.builder(
+              itemCount: snapshot.data != null ? snapshot.data!.length : 0,
+              scrollDirection: Axis.vertical,
+              shrinkWrap: true,
+              itemBuilder: ((context, index) {
+                return GestureDetector(
+                  onDoubleTap: () {
+                    //TODO: Add DB
+                  },
+                  child: ListTile(
+                    key: Key(index.toString()),
+                    leading: IconButton(
+                      icon: const Icon(
+                        Icons.check,
+                        color: Colors.green,
+                      ),
+                      onPressed: () {},
                     ),
-                    onPressed: () {},
+                    title: Text(
+                      snapshot.data![index].todo,
+                      style: const TextStyle(
+                          color: Color.fromARGB(255, 173, 173, 173),
+                          decoration: TextDecoration.lineThrough),
+                    ),
+                    trailing: Text(
+                      DateFormat('dd-MM-yyyy – kk:mm')
+                          .format(snapshot.data![index].finishedAt),
+                      style: const TextStyle(
+                          color: Color.fromARGB(255, 173, 173, 173)),
+                    ),
                   ),
-                  title: Text(
-                    doneTodos['done']![index].name,
-                    style: const TextStyle(
-                        color: Color.fromARGB(255, 173, 173, 173),
-                        decoration: TextDecoration.lineThrough),
-                  ),
-                  trailing: Text(
-                    DateFormat('dd-MM-yyyy – kk:mm')
-                        .format(doneTodos['done']![index].time),
-                    style: const TextStyle(
-                        color: Color.fromARGB(255, 173, 173, 173)),
-                  ),
-                ),
-              );
-            },
+                );
+              }),
+            ),
           ),
         ],
       ),

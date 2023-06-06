@@ -22,8 +22,13 @@ const TodoItemSchema = CollectionSchema(
       name: r'done',
       type: IsarType.bool,
     ),
-    r'todo': PropertySchema(
+    r'finishedAt': PropertySchema(
       id: 1,
+      name: r'finishedAt',
+      type: IsarType.dateTime,
+    ),
+    r'todo': PropertySchema(
+      id: 2,
       name: r'todo',
       type: IsarType.string,
     )
@@ -66,7 +71,8 @@ void _todoItemSerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeBool(offsets[0], object.done);
-  writer.writeString(offsets[1], object.todo);
+  writer.writeDateTime(offsets[1], object.finishedAt);
+  writer.writeString(offsets[2], object.todo);
 }
 
 TodoItem _todoItemDeserialize(
@@ -77,8 +83,9 @@ TodoItem _todoItemDeserialize(
 ) {
   final object = TodoItem();
   object.done = reader.readBoolOrNull(offsets[0]);
+  object.finishedAt = reader.readDateTime(offsets[1]);
   object.id = id;
-  object.todo = reader.readString(offsets[1]);
+  object.todo = reader.readString(offsets[2]);
   return object;
 }
 
@@ -92,6 +99,8 @@ P _todoItemDeserializeProp<P>(
     case 0:
       return (reader.readBoolOrNull(offset)) as P;
     case 1:
+      return (reader.readDateTime(offset)) as P;
+    case 2:
       return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -211,6 +220,59 @@ extension TodoItemQueryFilter
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'done',
         value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<TodoItem, TodoItem, QAfterFilterCondition> finishedAtEqualTo(
+      DateTime value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'finishedAt',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<TodoItem, TodoItem, QAfterFilterCondition> finishedAtGreaterThan(
+    DateTime value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'finishedAt',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<TodoItem, TodoItem, QAfterFilterCondition> finishedAtLessThan(
+    DateTime value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'finishedAt',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<TodoItem, TodoItem, QAfterFilterCondition> finishedAtBetween(
+    DateTime lower,
+    DateTime upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'finishedAt',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
       ));
     });
   }
@@ -430,6 +492,18 @@ extension TodoItemQuerySortBy on QueryBuilder<TodoItem, TodoItem, QSortBy> {
     });
   }
 
+  QueryBuilder<TodoItem, TodoItem, QAfterSortBy> sortByFinishedAt() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'finishedAt', Sort.asc);
+    });
+  }
+
+  QueryBuilder<TodoItem, TodoItem, QAfterSortBy> sortByFinishedAtDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'finishedAt', Sort.desc);
+    });
+  }
+
   QueryBuilder<TodoItem, TodoItem, QAfterSortBy> sortByTodo() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'todo', Sort.asc);
@@ -454,6 +528,18 @@ extension TodoItemQuerySortThenBy
   QueryBuilder<TodoItem, TodoItem, QAfterSortBy> thenByDoneDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'done', Sort.desc);
+    });
+  }
+
+  QueryBuilder<TodoItem, TodoItem, QAfterSortBy> thenByFinishedAt() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'finishedAt', Sort.asc);
+    });
+  }
+
+  QueryBuilder<TodoItem, TodoItem, QAfterSortBy> thenByFinishedAtDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'finishedAt', Sort.desc);
     });
   }
 
@@ -490,6 +576,12 @@ extension TodoItemQueryWhereDistinct
     });
   }
 
+  QueryBuilder<TodoItem, TodoItem, QDistinct> distinctByFinishedAt() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'finishedAt');
+    });
+  }
+
   QueryBuilder<TodoItem, TodoItem, QDistinct> distinctByTodo(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -509,6 +601,12 @@ extension TodoItemQueryProperty
   QueryBuilder<TodoItem, bool?, QQueryOperations> doneProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'done');
+    });
+  }
+
+  QueryBuilder<TodoItem, DateTime, QQueryOperations> finishedAtProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'finishedAt');
     });
   }
 
