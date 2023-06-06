@@ -5,6 +5,4 @@ The app allows you to Create Todo Lists, add Todos and to see you accomplished T
 
 The App itself uses a local [Isar DB ](https://isar.dev/de/) Database as well as [Riverpod](https://riverpod.dev/de/) for App wide State managment.
 
-<img src="./readme-images/Simulator%20Screenshot%20-%20iPhone%2014%20Pro%20Max%20-%202023-06-06%20at%2012.01.16.png"   height="300" >
-<img src="./readme-images/Simulator%20Screenshot%20-%20iPhone%2014%20Pro%20Max%20-%202023-06-06%20at%2012.01.23.png"   height="300"  >
-<img src="./readme-images/Simulator%20Screenshot%20-%20iPhone%2014%20Pro%20Max%20-%202023-06-06%20at%2012.01.27.png"   height="300">
+<img src="./readme-images/Simulator%20Screenshot%20-%20iPhone%2014%20Pro%20Max%20-%202023-06-06%20at%2012.01.16.png" style="height: 300px; margin: 20px;"><img src="./readme-images/Simulator%20Screenshot%20-%20iPhone%2014%20Pro%20Max%20-%202023-06-06%20at%2012.01.23.png" style="height: 300px; margin: 20px;"><img src="./readme-images/Simulator%20Screenshot%20-%20iPhone%2014%20Pro%20Max%20-%202023-06-06%20at%2012.01.27.png"   style="height: 300px; margin: 20px;">
