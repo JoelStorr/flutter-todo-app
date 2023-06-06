@@ -2,21 +2,17 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'dart:io';
 
-import 'package:todo_app/models/todo_project_model.dart';
+import 'package:todo_app/db/todo_project_db.dart';
 
-class TodoProjectsNotifire extends StateNotifier<List<TodoProject>> {
-  TodoProjectsNotifire() : super([TodoProject(position: 0, name: 'Todos')]);
+class TodoProjectsNotifire extends StateNotifier<TodoProject> {
+  TodoProjectsNotifire() : super(TodoProject());
 
-  bool addTodoProject({required String todoProjectName}) {
-    final currentListLength = state.length;
-    final tempTodoProject =
-        TodoProject(position: currentListLength, name: todoProjectName);
-
-    state = [...state, tempTodoProject];
+  bool setCurrentTodoProject({required TodoProject currProject}) {
+    state = currProject;
     return true;
   }
 }
 
 final todoProjectsProvider =
-    StateNotifierProvider<TodoProjectsNotifire, List<TodoProject>>(
+    StateNotifierProvider<TodoProjectsNotifire, TodoProject>(
         (ref) => TodoProjectsNotifire());
