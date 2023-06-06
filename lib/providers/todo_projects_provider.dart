@@ -1,11 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import 'dart:io';
-
 import 'package:todo_app/db/todo_project_db.dart';
 
-class TodoProjectsNotifire extends StateNotifier<TodoProject> {
-  TodoProjectsNotifire() : super(TodoProject());
+class TodoProjectsNotifire extends StateNotifier<TodoProject?> {
+  TodoProjectsNotifire() : super(null);
 
   bool setCurrentTodoProject({required TodoProject currProject}) {
     state = currProject;
@@ -14,5 +11,5 @@ class TodoProjectsNotifire extends StateNotifier<TodoProject> {
 }
 
 final todoProjectsProvider =
-    StateNotifierProvider<TodoProjectsNotifire, TodoProject>(
+    StateNotifierProvider<TodoProjectsNotifire, TodoProject?>(
         (ref) => TodoProjectsNotifire());

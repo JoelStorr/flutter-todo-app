@@ -9,6 +9,6 @@ class TodoItem {
   Id id = Isar.autoIncrement;
   late String todo;
   bool? done;
-  late DateTime finishedAt;
+  DateTime? finishedAt;
   final todoProject = IsarLink<TodoProject>();
 }

@@ -22,7 +22,7 @@ class _DoneTodosOverlayState extends ConsumerState<DoneTodosOverlay> {
 
   @override
   Widget build(BuildContext context) {
-    final TodoProject currentProject = ref.watch(todoProjectsProvider);
+    final TodoProject? currentProject = ref.watch(todoProjectsProvider);
 
     return Container(
       width: MediaQuery.of(context).size.width,
@@ -53,7 +53,7 @@ class _DoneTodosOverlayState extends ConsumerState<DoneTodosOverlay> {
             height: 30,
           ),
           StreamBuilder<List<TodoItem>>(
-            stream: service.listenDoneTodoItemsFor(currentProject),
+            stream: service.listenDoneTodoItemsFor(currentProject!),
             builder: (ctx, snapshot) => ListView.builder(
               itemCount: snapshot.data != null ? snapshot.data!.length : 0,
               scrollDirection: Axis.vertical,
@@ -80,7 +80,7 @@ class _DoneTodosOverlayState extends ConsumerState<DoneTodosOverlay> {
                     ),
                     trailing: Text(
                       DateFormat('dd-MM-yyyy – kk:mm')
-                          .format(snapshot.data![index].finishedAt),
+                          .format(snapshot.data![index].finishedAt!),
                       style: const TextStyle(
                           color: Color.fromARGB(255, 173, 173, 173)),
                     ),

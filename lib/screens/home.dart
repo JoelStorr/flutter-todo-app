@@ -34,13 +34,16 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    TodoProject _curProject = ref.watch(todoProjectsProvider);
+    TodoProject? _curProject = ref.watch(todoProjectsProvider);
 
     /* NOTE: Setup Base PRoject */
-    if (_curProject.fullyAdded == false) {
+    if (_curProject == null) {
       service.dbSetup().then((value) {
         setState(() {
           _curProject = value;
+          ref
+              .read(todoProjectsProvider.notifier)
+              .setCurrentTodoProject(currProject: value);
         });
       });
     }
@@ -70,7 +73,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
             Expanded(
                 child: _curProject != null
                     ? StreamBuilder<List<TodoItem>>(
-                        stream: service.listenActiveTodoItemsFor(_curProject),
+                        stream: service.listenActiveTodoItemsFor(_curProject!),
                         builder: (context, snapshot) => ListView.builder(
                             itemCount:
                                 snapshot.hasData ? snapshot.data!.length : 0,
@@ -133,6 +136,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                     : const Text('No data found')),
 
             /* NOTE: Shows Popup to display Todo History */
+
             const DoneTodos()
           ],
         ),

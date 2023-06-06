@@ -83,7 +83,7 @@ TodoItem _todoItemDeserialize(
 ) {
   final object = TodoItem();
   object.done = reader.readBoolOrNull(offsets[0]);
-  object.finishedAt = reader.readDateTime(offsets[1]);
+  object.finishedAt = reader.readDateTimeOrNull(offsets[1]);
   object.id = id;
   object.todo = reader.readString(offsets[2]);
   return object;
@@ -99,7 +99,7 @@ P _todoItemDeserializeProp<P>(
     case 0:
       return (reader.readBoolOrNull(offset)) as P;
     case 1:
-      return (reader.readDateTime(offset)) as P;
+      return (reader.readDateTimeOrNull(offset)) as P;
     case 2:
       return (reader.readString(offset)) as P;
     default:
@@ -224,8 +224,25 @@ extension TodoItemQueryFilter
     });
   }
 
+  QueryBuilder<TodoItem, TodoItem, QAfterFilterCondition> finishedAtIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'finishedAt',
+      ));
+    });
+  }
+
+  QueryBuilder<TodoItem, TodoItem, QAfterFilterCondition>
+      finishedAtIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'finishedAt',
+      ));
+    });
+  }
+
   QueryBuilder<TodoItem, TodoItem, QAfterFilterCondition> finishedAtEqualTo(
-      DateTime value) {
+      DateTime? value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'finishedAt',
@@ -235,7 +252,7 @@ extension TodoItemQueryFilter
   }
 
   QueryBuilder<TodoItem, TodoItem, QAfterFilterCondition> finishedAtGreaterThan(
-    DateTime value, {
+    DateTime? value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -248,7 +265,7 @@ extension TodoItemQueryFilter
   }
 
   QueryBuilder<TodoItem, TodoItem, QAfterFilterCondition> finishedAtLessThan(
-    DateTime value, {
+    DateTime? value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -261,8 +278,8 @@ extension TodoItemQueryFilter
   }
 
   QueryBuilder<TodoItem, TodoItem, QAfterFilterCondition> finishedAtBetween(
-    DateTime lower,
-    DateTime upper, {
+    DateTime? lower,
+    DateTime? upper, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
@@ -604,7 +621,7 @@ extension TodoItemQueryProperty
     });
   }
 
-  QueryBuilder<TodoItem, DateTime, QQueryOperations> finishedAtProperty() {
+  QueryBuilder<TodoItem, DateTime?, QQueryOperations> finishedAtProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'finishedAt');
     });
